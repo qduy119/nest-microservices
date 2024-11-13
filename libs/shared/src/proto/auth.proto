@@ -15,12 +15,17 @@ message RefreshTokenDto {
   string accessToken = 1;
 }
 
+enum GENDER {
+  MALE = 0,
+  FEMALE = 1,
+  OTHER = 2
+}
+
 message RegisterReqDto {
   string email = 1;
   string password = 2;
   string fullName = 3;
-  string gender = 4;
-  string avatar = 5;
+  optional GENDER gender = 4;
 }
 
 message RegisterResDto {

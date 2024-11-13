@@ -8,7 +8,7 @@ describe('UserController (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [UserModule],
+      imports: [UserModule]
     }).compile();
 
     app = moduleFixture.createNestApplication();

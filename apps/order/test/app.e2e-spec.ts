@@ -8,7 +8,7 @@ describe('OrderController (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [OrderModule],
+      imports: [OrderModule]
     }).compile();
 
     app = moduleFixture.createNestApplication();

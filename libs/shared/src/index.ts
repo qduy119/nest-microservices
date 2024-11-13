@@ -1,3 +1,5 @@
-import { join } from 'path';
-
-export const authProtoPath = join(__dirname, 'proto/auth.proto');
+export * from './proto';
+export * from './logger';
+export * from './dto';
+export * from './constants';
+export * from './entities';

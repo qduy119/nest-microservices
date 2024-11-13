@@ -8,7 +8,7 @@ describe('PaymentController (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [PaymentModule],
+      imports: [PaymentModule]
     }).compile();
 
     app = moduleFixture.createNestApplication();
