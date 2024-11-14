@@ -17,7 +17,12 @@
       "sourceRoot": "apps/api-gateway/src",
       "compilerOptions": {
         "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
-        "assets": [{"include": "./config/*.yaml", "watchAssets": true}]
+        "assets": [
+          {
+            "include": "./config/*.yaml",
+            "watchAssets": true
+          }
+        ]
       }
     },
     "user": {
@@ -49,6 +54,15 @@
       "sourceRoot": "libs/utils/src",
       "compilerOptions": {
         "tsConfigPath": "libs/utils/tsconfig.lib.json"
+      }
+    },
+    "auth": {
+      "type": "application",
+      "root": "apps/auth",
+      "entryFile": "main",
+      "sourceRoot": "apps/auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/auth/tsconfig.app.json"
       }
     }
   }
