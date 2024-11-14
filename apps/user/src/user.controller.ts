@@ -1,13 +1,15 @@
 import { GrpcMethod } from '@nestjs/microservices';
 import { Controller } from '@nestjs/common';
+import { GetUserByIdDto } from '@app/shared';
 import { UserService } from './user.service';
 
 @Controller()
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private userService: UserService) {}
 
-  @GrpcMethod()
-  getById: string {
-    return this.userService.getHello();
+  @GrpcMethod('UserService')
+  async getUserById(data: GetUserByIdDto) {
+    const user = await this.userService.findById(data.id);
+    return { user };
   }
 }

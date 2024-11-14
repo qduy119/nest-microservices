@@ -16,16 +16,16 @@ message RefreshTokenDto {
 }
 
 enum GENDER {
-  MALE = 0,
-  FEMALE = 1,
-  OTHER = 2
+  MALE = 0;
+  FEMALE = 1;
+  OTHER = 2;
 }
 
 message RegisterReqDto {
   string email = 1;
   string password = 2;
   string fullName = 3;
-  optional GENDER gender = 4;
+  GENDER gender = 4;
 }
 
 message RegisterResDto {
@@ -34,6 +34,6 @@ message RegisterResDto {
 
 service AuthService {
   rpc Login (LoginReqDto) returns (LoginResDto);
-  rpc RefreshToken (RefreshTokenDto) returns (LoginResDto);
+  rpc RefreshToken (google.protobuf.Empty) returns (RefreshTokenDto);
   rpc Register (RegisterReqDto) returns (RegisterResDto);
 }

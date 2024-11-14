@@ -15,8 +15,10 @@ describe('UserController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(userController.getHello()).toBe('Hello World!');
+    it('should return user 1', async () => {
+      expect(await userController.getUserById({ id: '1' })).toBe(
+        'Hello World!'
+      );
     });
   });
 });

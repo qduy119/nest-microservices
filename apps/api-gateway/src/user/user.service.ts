@@ -1,32 +1,41 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  USER_PACKAGE,
+  IUserService,
+  GetUserByIdDto,
+  DeleteUserDto
+} from '@app/shared';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 
 @Injectable()
-export class UserService implements OnModuleInit {
-  private client: ClientGrpc;
+export class UserClientService implements OnModuleInit {
+  private userService: IUserService;
+
+  constructor(@Inject(USER_PACKAGE) private client: ClientGrpc) {}
 
   onModuleInit() {
-    throw new Error('Method not implemented.');
-  }
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    this.userService = this.client.getService<IUserService>('UserService');
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async create(createUserDto: CreateUserDto) {
+    return await this.userService.createUser(createUserDto);
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} user`;
+  async findAll() {
+    return await this.userService.getAllUsers();
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async findOne(getUserByIdDto: GetUserByIdDto) {
+    return await this.userService.getUserById(getUserByIdDto);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  async update(updateUserDto: UpdateUserDto) {
+    return await this.userService.updateUser(updateUserDto);
+  }
+
+  async remove(deleteUserDto: DeleteUserDto) {
+    return await this.userService.deleteUser(deleteUserDto);
   }
 }

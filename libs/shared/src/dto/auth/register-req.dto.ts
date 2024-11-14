@@ -32,9 +32,4 @@ export class RegisterReqDto {
   @IsOptional()
   @ApiProperty()
   gender?: string;
-
-  @IsString()
-  @ApiProperty()
-  @IsOptional()
-  avatar?: string;
 }

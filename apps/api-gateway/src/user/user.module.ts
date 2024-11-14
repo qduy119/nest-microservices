@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { UserController } from './user.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { USER_PACKAGE, userProtoPath } from '@app/shared';
+import { USER_PACKAGE, userGrpcClientOption } from '@app/shared';
+import { UserController } from './user.controller';
+import { UserClientService } from './user.service';
 
 @Module({
   imports: [
@@ -9,13 +10,11 @@ import { USER_PACKAGE, userProtoPath } from '@app/shared';
       {
         name: USER_PACKAGE,
         transport: Transport.GRPC,
-        options: {
-          package: 'user',
-          protoPath: userProtoPath
-        }
+        options: userGrpcClientOption
       }
     ])
   ],
-  controllers: [UserController]
+  controllers: [UserController],
+  providers: [UserClientService]
 })
 export class UserModule {}
