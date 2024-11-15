@@ -1,7 +1,9 @@
-import { LoginReqDto, RegisterReqDto } from '@app/shared/dto';
+import { LoginReqDto, RefreshTokenDto, VerifyTokenDto } from '@app/shared/dto';
 
 export interface IAuthService {
   login(request: LoginReqDto): Promise<{ accessToken: string }>;
-  refreshToken(): Promise<{ accessToken: string }>;
-  register(request: RegisterReqDto): Promise<{ status: boolean }>;
+  refreshToken(
+    request: RefreshTokenDto
+  ): Promise<{ accessToken: string; refreshToken: string }>;
+  verifyToken(request: VerifyTokenDto): Promise<{ isVerified: boolean }>;
 }

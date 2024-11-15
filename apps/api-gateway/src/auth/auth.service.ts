@@ -1,26 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { AUTH_PACKAGE, IAuthService, LoginReqDto } from '@app/shared';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { ClientGrpc } from '@nestjs/microservices';
 
 @Injectable()
-export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+export class AuthService implements OnModuleInit {
+  private authService: IAuthService;
+
+  constructor(@Inject(AUTH_PACKAGE) private client: ClientGrpc) {}
+
+  onModuleInit() {
+    this.authService = this.client.getService<IAuthService>('AuthService');
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  async login(loginReqDto: LoginReqDto) {
+    return await this.authService.login(loginReqDto);
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async refreshToken(refreshToken: string) {
+    return await this.authService.refreshToken({ refreshToken });
   }
 }

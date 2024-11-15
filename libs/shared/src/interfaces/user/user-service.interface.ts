@@ -1,6 +1,7 @@
 import {
   CreateUserDto,
   DeleteUserDto,
+  GetUserByCredentialsDto,
   GetUserByIdDto,
   UpdateUserDto
 } from '@app/shared/dto';
@@ -11,5 +12,8 @@ export interface IUserService {
   createUser(request: CreateUserDto): Promise<{ status: boolean }>;
   deleteUser(request: DeleteUserDto): Promise<{ status: boolean }>;
   getUserById(request: GetUserByIdDto): Promise<{ user: IUser }>;
+  getUserByCredentials(
+    request: GetUserByCredentialsDto
+  ): Promise<{ user: IUser }>;
   getAllUsers(): Promise<{ users: IUser[] }>;
 }

@@ -2,38 +2,34 @@ syntax = "proto3";
 
 package auth;
 
-message LoginReqDto {
+message LoginRequest {
   string email = 1;
   string password = 2;
 }
 
-message LoginResDto {
+message LoginResponse {
   string accessToken = 1;
 }
 
-message RefreshTokenDto {
+message RefreshTokenRequest {
+  string refreshToken = 1;
+}
+
+message RefreshTokenResponse {
+  string accessToken = 1;
+  string refreshToken = 2;
+}
+
+message VerifyTokenRequest {
   string accessToken = 1;
 }
 
-enum GENDER {
-  MALE = 0;
-  FEMALE = 1;
-  OTHER = 2;
-}
-
-message RegisterReqDto {
-  string email = 1;
-  string password = 2;
-  string fullName = 3;
-  GENDER gender = 4;
-}
-
-message RegisterResDto {
-  bool status = 1;
+message VerifyTokenResponse {
+  bool isVerified = 1;
 }
 
 service AuthService {
-  rpc Login (LoginReqDto) returns (LoginResDto);
-  rpc RefreshToken (google.protobuf.Empty) returns (RefreshTokenDto);
-  rpc Register (RegisterReqDto) returns (RegisterResDto);
+  rpc Login (LoginRequest) returns (LoginResponse);
+  rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
+  rpc VerifyToken (VerifyTokenRequest) returns (VerifyTokenResponse);
 }

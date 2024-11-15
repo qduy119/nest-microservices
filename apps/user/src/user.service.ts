@@ -13,4 +13,15 @@ export class UserService {
     this.logger.debug('[USER_SERVICE] findById: ' + id);
     return await this.userRepository.findByPk(id);
   }
+
+  async findByCredentials({
+    email,
+    password
+  }: {
+    email: string;
+    password: string;
+  }): Promise<IUser> {
+    this.logger.debug('[USER_SERVICE] findByCredentials: ', email, password);
+    return await this.userRepository.findOne({ where: { email, password } });
+  }
 }

@@ -67,6 +67,15 @@ message GetUserByIdResponse {
   User user = 1;
 }
 
+message GetUserByCredentialsRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message GetUserByCredentialsResponse {
+  User user = 1;
+}
+
 message GetAllUsersResponse {
   repeated User users = 1;
 }
@@ -76,5 +85,6 @@ service UserService {
   rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
   rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
   rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
+  rpc GetUserByCredentials (GetUserByCredentialsRequest) returns (GetUserByCredentialsResponse);
   rpc GetAllUsers (google.protobuf.Empty) returns (GetAllUsersResponse);
 }
