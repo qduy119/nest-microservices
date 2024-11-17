@@ -21,6 +21,17 @@ enum ROLE {
   ADMIN = 1;
 }
 
+message User {
+  string id = 1;
+  string email = 2;
+  string password = 3;
+  string fullName = 4;
+  GENDER gender = 5;
+  PROVIDER provider = 6;
+  string avatar = 7;
+  repeated ROLE role = 8;
+}
+
 message CreateUserRequest {
   string id = 1;
   string email = 2;

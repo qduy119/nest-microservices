@@ -9,10 +9,6 @@ export type AppConfig = {
     node_env: string;
     log_level: string;
   };
-  http: {
-    host: string;
-    port: number;
-  };
   jwt: {
     access_token: {
       secret_key: string;

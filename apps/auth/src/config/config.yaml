@@ -2,10 +2,6 @@ app:
   node_env: development
   log_level: debug
 
-http:
-  host: localhost
-  port: 3000
-
 jwt:
   access_token:
     secret_key: this-is-an-access-token
