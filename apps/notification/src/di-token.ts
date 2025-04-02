@@ -1,0 +1,1 @@
+export const NOTIFICATION_SERVICE = Symbol.for('NOTIFICATION_SERVICE');

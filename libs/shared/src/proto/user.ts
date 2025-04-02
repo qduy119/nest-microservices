@@ -2,12 +2,11 @@
 // versions:
 //   protoc-gen-ts_proto  v2.3.0
 //   protoc               v5.28.3
-// source: user.proto
+// source: libs/shared/src/proto/user.proto
 
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
-import { Empty } from "./google/protobuf/empty";
 
 export const protobufPackage = "user";
 
@@ -15,61 +14,58 @@ export enum GENDER {
   MALE = 0,
   FEMALE = 1,
   OTHER = 2,
-  UNRECOGNIZED = -1,
 }
 
 export enum PROVIDER {
   GOOGLE = 0,
   GITHUB = 1,
   LOCAL = 2,
-  UNRECOGNIZED = -1,
 }
 
 export enum ROLE {
   USER = 0,
   ADMIN = 1,
-  UNRECOGNIZED = -1,
 }
 
 export interface User {
   id: string;
   email: string;
   password: string;
-  fullName: string;
+  fullName?: string | undefined;
   gender: GENDER;
   provider: PROVIDER;
   avatar: string;
-  role: ROLE[];
+  roles: ROLE[];
 }
 
 export interface CreateUserRequest {
-  id: string;
-  email: string;
-  password: string;
-  fullName: string;
-  gender: GENDER;
-  provider: PROVIDER;
-  avatar: string;
-  role: ROLE[];
+  id?: string | undefined;
+  email?: string | undefined;
+  password?: string | undefined;
+  fullName?: string | undefined;
+  gender?: GENDER | undefined;
+  provider?: PROVIDER | undefined;
+  avatar?: string | undefined;
+  roles?: ROLE[];
 }
 
 export interface CreateUserResponse {
-  status: boolean;
+  user: User | undefined;
 }
 
 export interface UpdateUserRequest {
-  id: string;
-  email: string;
-  password: string;
-  fullName: string;
-  gender: GENDER;
-  provider: PROVIDER;
-  avatar: string;
-  role: ROLE[];
+  id?: string | undefined;
+  email?: string | undefined;
+  password?: string | undefined;
+  fullName?: string | undefined;
+  gender?: GENDER | undefined;
+  provider?: PROVIDER | undefined;
+  avatar?: string | undefined;
+  roles?: ROLE[];
 }
 
 export interface UpdateUserResponse {
-  status: boolean;
+  success: boolean;
 }
 
 export interface DeleteUserRequest {
@@ -77,7 +73,7 @@ export interface DeleteUserRequest {
 }
 
 export interface DeleteUserResponse {
-  status: boolean;
+  success: boolean;
 }
 
 export interface GetUserByIdRequest {
@@ -89,16 +85,50 @@ export interface GetUserByIdResponse {
 }
 
 export interface GetUserByCredentialsRequest {
-  email: string;
-  password: string;
+  email?: string | undefined;
+  password?: string | undefined;
 }
 
 export interface GetUserByCredentialsResponse {
   user: User | undefined;
 }
 
+export interface GetAllUsersFilter {
+  id?: string | undefined;
+  email?: string | undefined;
+  password?: string | undefined;
+  fullName?: string | undefined;
+  gender?: GENDER | undefined;
+  provider?: PROVIDER | undefined;
+  avatar?: string | undefined;
+  roles?: ROLE[];
+}
+
+export interface GetAllUsersParams {
+  page: number;
+  limit: number;
+}
+
+export interface GetAllUsersRequest {
+  filter?: GetAllUsersFilter | undefined;
+  params?: GetAllUsersParams | undefined;
+}
+
 export interface GetAllUsersResponse {
-  users: User[];
+  data: User[];
+  total?: number | undefined;
+  page?: number | undefined;
+  limit?: number | undefined;
+  totalPages?: number | undefined;
+}
+
+export interface VerifyUserCredentialsRequest {
+  email: string;
+  password: string;
+}
+
+export interface VerifyUserCredentialsResponse {
+  user: User | undefined;
 }
 
 export const USER_PACKAGE_NAME = "user";
@@ -114,7 +144,9 @@ export interface UserServiceClient {
 
   getUserByCredentials(request: GetUserByCredentialsRequest): Observable<GetUserByCredentialsResponse>;
 
-  getAllUsers(request: Empty): Observable<GetAllUsersResponse>;
+  getAllUsers(request: GetAllUsersRequest): Observable<GetAllUsersResponse>;
+
+  verifyUserCredentials(request: VerifyUserCredentialsRequest): Observable<VerifyUserCredentialsResponse>;
 }
 
 export interface UserServiceController {
@@ -138,7 +170,13 @@ export interface UserServiceController {
     request: GetUserByCredentialsRequest,
   ): Promise<GetUserByCredentialsResponse> | Observable<GetUserByCredentialsResponse> | GetUserByCredentialsResponse;
 
-  getAllUsers(request: Empty): Promise<GetAllUsersResponse> | Observable<GetAllUsersResponse> | GetAllUsersResponse;
+  getAllUsers(
+    request: GetAllUsersRequest,
+  ): Promise<GetAllUsersResponse> | Observable<GetAllUsersResponse> | GetAllUsersResponse;
+
+  verifyUserCredentials(
+    request: VerifyUserCredentialsRequest,
+  ): Promise<VerifyUserCredentialsResponse> | Observable<VerifyUserCredentialsResponse> | VerifyUserCredentialsResponse;
 }
 
 export function UserServiceControllerMethods() {
@@ -150,6 +188,7 @@ export function UserServiceControllerMethods() {
       "getUserById",
       "getUserByCredentials",
       "getAllUsers",
+      "verifyUserCredentials",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

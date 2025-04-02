@@ -8,7 +8,7 @@ describe('AuthController (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AuthModule],
+      imports: [AuthModule]
     }).compile();
 
     app = moduleFixture.createNestApplication();

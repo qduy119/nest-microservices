@@ -1,32 +1,42 @@
-import winston, { transports, format } from 'winston';
+import * as winston from 'winston';
 import {
   WinstonModule,
   utilities as nestWinstonModuleUtilities
 } from 'nest-winston';
+import 'winston-daily-rotate-file';
 
 export const LoggerFactory = (appName: string, logLevel: string) => {
-  const consoleFormat = format.combine(
-    format.timestamp(),
-    format.ms(),
-    nestWinstonModuleUtilities.format.nestLike(appName, {
-      colors: true,
-      prettyPrint: true
-    })
-  );
+  const { combine, timestamp, json } = winston.format;
+
   return WinstonModule.createLogger({
     level: logLevel,
-    transports: [
-      new transports.Console({ format: consoleFormat }),
-      new winston.transports.File({
-        filename: 'logs/error.log',
-        level: 'error'
+    format: combine(
+      timestamp({
+        format: 'YYYY-MM-DD hh:mm:ss.SSS A'
       }),
-      new winston.transports.File({ filename: 'logs/warn.log', level: 'warn' }),
-      new winston.transports.File({ filename: 'logs/info.log', level: 'info' }),
-      new winston.transports.File({ filename: 'logs/http.log', level: 'http' }),
-      new winston.transports.File({
-        filename: 'logs/debug.log',
-        level: 'debug'
+      nestWinstonModuleUtilities.format.nestLike(appName, {
+        colors: true,
+        prettyPrint: true
+      })
+    ),
+    transports: [
+      new winston.transports.Console(),
+      ...['debug', 'error'].map((level) => {
+        return new winston.transports.DailyRotateFile({
+          dirname: 'logs',
+          filename: `%DATE%-${level}.log`,
+          datePattern: 'YYYY-MM-DD',
+          zippedArchive: true,
+          maxSize: '1m',
+          maxFiles: '7d',
+          format: combine(
+            timestamp({
+              format: 'YYYY-MM-DD hh:mm:ss.SSS A'
+            }),
+            json()
+          ),
+          level
+        });
       })
     ],
     exceptionHandlers: [

@@ -1,51 +1,91 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   HttpCode,
+  Inject,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
-  Put
+  Req
 } from '@nestjs/common';
-import { Payload } from '@nestjs/microservices';
-import { CreateUserDto, UpdateUserDto } from '@app/shared';
-import { UserClientService } from './user.service';
+import {
+  CreateUserDto,
+  IPaginatedParam,
+  IUserEntity,
+  ROLE,
+  UpdateUserDto
+} from '@app/shared';
+import { USER_SERVICE_CLIENT } from './di-token';
+import { UserServiceClient } from '@app/shared/proto/user';
+import { Roles, User } from '../decorators';
+import { firstValueFrom } from 'rxjs';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 
+@ApiTags('User')
+@ApiBearerAuth()
 @Controller('user')
 export class UserController {
-  constructor(private readonly userClientService: UserClientService) {}
+  constructor(
+    @Inject(USER_SERVICE_CLIENT)
+    private readonly userServiceClient: UserServiceClient
+  ) {}
 
+  @Roles(ROLE.ADMIN)
   @Post()
   @HttpCode(200)
-  async create(@Payload() createUserDto: CreateUserDto) {
-    return await this.userClientService.create(createUserDto);
+  create(@Body() createUserDto: CreateUserDto) {
+    const data = this.userServiceClient.createUser(createUserDto);
+    return firstValueFrom(data);
   }
 
+  @Roles(ROLE.ADMIN)
   @Get()
   @HttpCode(200)
-  async findAll() {
-    return await this.userClientService.findAll();
+  findAll(@Req() req: Request) {
+    const { page, limit } = req.query as IPaginatedParam;
+    const data = this.userServiceClient.getAllUsers({
+      params: { page, limit }
+    });
+    return firstValueFrom(data);
   }
 
+  @Roles(ROLE.USER, ROLE.ADMIN)
+  @Get('/me')
+  @HttpCode(200)
+  getMe(@User() user: IUserEntity) {
+    const data = this.userServiceClient.getUserById({ id: user.id });
+    return firstValueFrom(data);
+  }
+
+  @Roles(ROLE.ADMIN)
   @Get(':id')
   @HttpCode(200)
-  async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.userClientService.findOne({ id });
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    const data = this.userServiceClient.getUserById({ id });
+    return firstValueFrom(data);
   }
 
-  @Put(':id')
+  @Roles(ROLE.ADMIN)
+  @Patch(':id')
   @HttpCode(200)
-  async update(
+  update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Payload() updateUserDto: UpdateUserDto
+    @Body() updateUserDto: UpdateUserDto
   ) {
-    return await this.userClientService.update({ id, ...updateUserDto });
+    const payload = { id, ...updateUserDto };
+    const data = this.userServiceClient.updateUser(payload);
+    return firstValueFrom(data);
   }
 
+  @Roles(ROLE.ADMIN)
   @Delete(':id')
   @HttpCode(200)
-  async remove(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.userClientService.remove({ id });
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    const data = this.userServiceClient.deleteUser({ id });
+    return firstValueFrom(data);
   }
 }

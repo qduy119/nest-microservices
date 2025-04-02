@@ -2,11 +2,12 @@
 // versions:
 //   protoc-gen-ts_proto  v2.3.0
 //   protoc               v5.28.3
-// source: auth.proto
+// source: libs/shared/src/proto/auth.proto
 
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
+import { User } from "./user";
 
 export const protobufPackage = "auth";
 
@@ -17,6 +18,16 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   accessToken: string;
+  refreshToken: string;
+}
+
+export interface RegisterRequest {
+  email: string;
+  password: string;
+}
+
+export interface RegisterResponse {
+  isRegistered: boolean;
 }
 
 export interface RefreshTokenRequest {
@@ -33,13 +44,15 @@ export interface VerifyTokenRequest {
 }
 
 export interface VerifyTokenResponse {
-  isVerified: boolean;
+  user: User | undefined;
 }
 
 export const AUTH_PACKAGE_NAME = "auth";
 
 export interface AuthServiceClient {
   login(request: LoginRequest): Observable<LoginResponse>;
+
+  register(request: RegisterRequest): Observable<RegisterResponse>;
 
   refreshToken(request: RefreshTokenRequest): Observable<RefreshTokenResponse>;
 
@@ -48,6 +61,8 @@ export interface AuthServiceClient {
 
 export interface AuthServiceController {
   login(request: LoginRequest): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse;
+
+  register(request: RegisterRequest): Promise<RegisterResponse> | Observable<RegisterResponse> | RegisterResponse;
 
   refreshToken(
     request: RefreshTokenRequest,
@@ -60,7 +75,7 @@ export interface AuthServiceController {
 
 export function AuthServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["login", "refreshToken", "verifyToken"];
+    const grpcMethods: string[] = ["login", "register", "refreshToken", "verifyToken"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AuthService", method)(constructor.prototype[method], method, descriptor);

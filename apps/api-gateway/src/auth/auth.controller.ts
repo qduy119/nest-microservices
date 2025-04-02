@@ -1,22 +1,41 @@
-import { Body, Controller, Get, HttpCode, Post, Req } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LoginReqDto } from '@app/shared';
-import { Request } from 'express';
+import { Body, Controller, Get, HttpCode, Inject, Post } from '@nestjs/common';
+import { LoginReqDto, RegisterReqDto, ROLE } from '@app/shared';
+import { Cookies, Public, Roles } from '../decorators';
+import { AUTH_SERVICE_CLIENT } from './di-token';
+import { AuthServiceClient } from '@app/shared/proto/auth';
+import { firstValueFrom } from 'rxjs';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
+@ApiBearerAuth()
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authClientService: AuthService) {}
+  constructor(
+    @Inject(AUTH_SERVICE_CLIENT)
+    private readonly authClientService: AuthServiceClient
+  ) {}
 
+  @Public()
   @Post('login')
   @HttpCode(200)
-  async login(@Body() loginReqDto: LoginReqDto) {
-    return await this.authClientService.login(loginReqDto);
+  login(@Body() loginReqDto: LoginReqDto) {
+    const data = this.authClientService.login(loginReqDto);
+    return firstValueFrom(data);
   }
 
+  @Public()
+  @Post('register')
+  @HttpCode(200)
+  register(@Body() registeReqDto: RegisterReqDto) {
+    const data = this.authClientService.register(registeReqDto);
+    return firstValueFrom(data);
+  }
+
+  @Roles(ROLE.USER, ROLE.ADMIN)
   @Get('refresh-token')
   @HttpCode(200)
-  async refresh(@Req() req: Request) {
-    const refreshToken = req.cookies['refresh-token'];
-    return await this.authClientService.refreshToken(refreshToken);
+  refresh(@Cookies('refresh-token') refreshToken: string) {
+    const data = this.authClientService.refreshToken({ refreshToken });
+    return firstValueFrom(data);
   }
 }

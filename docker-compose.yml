@@ -1,0 +1,159 @@
+version: '3.8'
+name: nest-microservices
+
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    depends_on:
+      - postgres_user
+      - postgres_item
+      - mongodb_cart
+      - mongodb_order
+      - mongodb_payment
+      - rabbitmq_order
+      - kafka_notification
+    networks:
+      - app_network
+
+  postgres_user:
+    image: postgres
+    container_name: postgres_user
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: microservices_user
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data_user:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  postgres_item:
+    image: postgres
+    container_name: postgres_item
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: microservices_item
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_data_item:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  mongodb_cart:
+    image: mongo
+    container_name: mongodb_cart
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data_cart:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: microservices_cart
+    networks:
+      - app_network
+
+  mongodb_order:
+    image: mongo
+    container_name: mongodb_order
+    ports:
+      - '27018:27017'
+    volumes:
+      - mongodb_data_order:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: microservices_order
+    networks:
+      - app_network
+
+  mongodb_payment:
+    image: mongo
+    container_name: mongodb_payment
+    ports:
+      - '27019:27017'
+    volumes:
+      - mongodb_data_payment:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: microservices_payment
+    networks:
+      - app_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - MAX_LOGIN_ATTEMPTS=10
+    ports:
+      - '5050:80'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - app_network
+
+  rabbitmq_order:
+    image: rabbitmq:4-management
+    container_name: rabbitmq_order
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: password
+    networks:
+      - app_network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    tmpfs: "/datalog"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - '2181:2181'
+    networks:
+      - app_network
+
+  kafka_notification:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka_notification
+    ports:
+      - '9092:9092'
+      - '29092:29092'
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_notification:9092,PLAINTEXT_HOST://kafka_notification:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKAJS_NO_PARTITIONER_WARNING: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    networks:
+      - app_network
+
+volumes:
+  pgadmin_data:
+  postgres_data_user:
+  postgres_data_item:
+  mongodb_data_cart:
+  mongodb_data_order:
+  mongodb_data_payment:
+
+networks:
+  app_network:
+    driver: bridge
+  

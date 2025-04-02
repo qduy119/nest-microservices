@@ -1,0 +1,6 @@
+db:
+  host: postgres_item
+  port: 5432
+  username: root
+  password: postgres
+  database: microservices_item

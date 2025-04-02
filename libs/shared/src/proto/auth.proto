@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package auth;
 
+import "user.proto";
+
 message LoginRequest {
   string email = 1;
   string password = 2;
@@ -9,6 +11,16 @@ message LoginRequest {
 
 message LoginResponse {
   string accessToken = 1;
+  string refreshToken = 2;
+}
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message RegisterResponse {
+  bool isRegistered = 1;
 }
 
 message RefreshTokenRequest {
@@ -25,11 +37,12 @@ message VerifyTokenRequest {
 }
 
 message VerifyTokenResponse {
-  bool isVerified = 1;
+  user.User user = 1;
 }
 
 service AuthService {
   rpc Login (LoginRequest) returns (LoginResponse);
+  rpc Register (RegisterRequest) returns (RegisterResponse);
   rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
   rpc VerifyToken (VerifyTokenRequest) returns (VerifyTokenResponse);
 }

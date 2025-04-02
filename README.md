@@ -58,6 +58,13 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
+## Generate proto
+
+```bash
+# Proto is a proto's name: auth, user, ...
+$ ./generate-proto ${proto}
+```
+
 ## Resources
 
 Check out a few resources that may come in handy when working with NestJS:

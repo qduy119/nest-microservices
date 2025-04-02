@@ -1,11 +1,12 @@
 import { ConfigService } from '@nestjs/config';
 import { Sequelize } from 'sequelize-typescript';
 import { AppConfig } from '../config';
-import { User } from '../user.entity';
+import { UserModel } from '../user.model';
+import { USER_SEQUELIZE } from '../di-token';
 
 export const databaseProviders = [
   {
-    provide: 'USER_SEQUELIZE',
+    provide: USER_SEQUELIZE,
     useFactory: async (configService: ConfigService) => {
       const { host, port, username, password, database } =
         configService.get<AppConfig['db']>('db');
@@ -17,7 +18,7 @@ export const databaseProviders = [
         password,
         database
       });
-      sequelize.addModels([User]);
+      sequelize.addModels([UserModel]);
       await sequelize.sync();
       return sequelize;
     },

@@ -1,20 +1,33 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { USER_PACKAGE, userGrpcClientOption } from '@app/shared';
+import { ShareConfig, ShareConfigModule, userGrpcOption } from '@app/shared';
 import { UserController } from './user.controller';
-import { UserClientService } from './user.service';
+import { USER_PACKAGE_NAME } from '@app/shared/proto/user';
+import { ConfigService } from '@nestjs/config';
+import { userServiceProviders } from './user.providers';
 
 @Module({
   imports: [
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
-        name: USER_PACKAGE,
-        transport: Transport.GRPC,
-        options: userGrpcClientOption
+        name: USER_PACKAGE_NAME,
+        inject: [ConfigService],
+        imports: [ShareConfigModule],
+        useFactory: (config: ConfigService) => {
+          const { host, port } =
+            config.get<ShareConfig['user_grpc']>('user_grpc');
+          return {
+            transport: Transport.GRPC,
+            options: {
+              ...userGrpcOption,
+              url: `${host}:${port}`
+            }
+          };
+        }
       }
     ])
   ],
   controllers: [UserController],
-  providers: [UserClientService]
+  providers: [...userServiceProviders]
 })
 export class UserModule {}

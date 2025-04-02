@@ -1,11 +1,6 @@
-app:
-  node_env: development
-  log_level: debug
-
-db: 
-  host: localhost
+db:
+  host: postgres_user
   port: 5432
   username: root
   password: postgres
-  database: microservices-user
-  
+  database: microservices_user

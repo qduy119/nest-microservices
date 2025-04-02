@@ -1,0 +1,6 @@
+db:
+  username: admin
+  password: password
+  host: mongodb_cart
+  port: 27017
+  dbName: microservices_cart

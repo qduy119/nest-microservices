@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package item;
+
+message DecreaseQuantityRequest {
+  int32 itemId = 2;
+  int32 quantity = 3;
+}
+
+message DecreaseQuantityResponse {
+  bool success = 1;
+}
+
+service ItemService {
+  rpc DecreaseQuantity (DecreaseQuantityRequest) returns (DecreaseQuantityResponse);
+}

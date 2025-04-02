@@ -1,25 +1,3 @@
-app:
-  node_env: development
-  log_level: debug
-
 http:
   host: localhost
   port: 3000
-
-jwt:
-  access_token:
-    secret_key: this-is-an-access-token
-    expires_in: 1h
-  refresh_token:
-    secret_key: this-is-an-refresh-token
-    expires_in: 7d
-  
-oauth2:
-  google:
-    client_id: 842493285265-mmf2nvdb995vo5dpi53vfouigij54a2b.apps.googleusercontent.com
-    client_secret: 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
-    client_callback: http://localhost:3000/auth/google/callback
-  github:
-    client_id: Ov23liAPtlWCz6CJ8fSf
-    client_secret: b9998bbfa6b7ecce9e0485ab4edc8372c0a228fc
-    client_callback: http://localhost:3000/auth/github/callback

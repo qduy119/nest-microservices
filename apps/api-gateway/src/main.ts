@@ -4,9 +4,12 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
+import {
+  CatchAllExceptionFilter,
+  LoggerFactory,
+  ShareConfig
+} from '@app/shared';
 import { AppConfig } from './config';
-import { HttpExceptionFilter } from './exception';
-import { LoggerFactory } from '@app/shared';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -23,7 +26,6 @@ async function bootstrap() {
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
   });
-  app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       exceptionFactory(errors) {
@@ -40,19 +42,22 @@ async function bootstrap() {
   app.use(helmet());
   app.use(cookieParser());
   app.setGlobalPrefix('api');
+  app.useGlobalFilters(new CatchAllExceptionFilter());
 
   const config = new DocumentBuilder()
-    .setTitle('API Gateway for a basic E-commerce project')
+    .setTitle('E-commerce microservice projects')
     .setDescription('NestJS API Documentation')
     .setVersion('1.0')
-    .addTag('NestJS')
+    .addBearerAuth()
     .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory, {
+    jsonDocumentUrl: 'api/swagger/json'
+  });
 
   const configService = app.get(ConfigService);
   const PORT = configService.get<AppConfig['http']>('http').port;
-  const LOG_LEVEL = configService.get<AppConfig['app']>('app').log_level;
+  const LOG_LEVEL = configService.get<ShareConfig['app']>('app').log_level;
 
   app.useLogger(LoggerFactory('NestApiGateway', LOG_LEVEL));
 

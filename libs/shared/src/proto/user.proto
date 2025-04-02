@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import "google/protobuf/empty.proto";
-
 package user;
 
 enum GENDER {
@@ -25,41 +23,41 @@ message User {
   string id = 1;
   string email = 2;
   string password = 3;
-  string fullName = 4;
+  optional string fullName = 4;
   GENDER gender = 5;
   PROVIDER provider = 6;
   string avatar = 7;
-  repeated ROLE role = 8;
+  repeated ROLE roles = 8;
 }
 
 message CreateUserRequest {
-  string id = 1;
-  string email = 2;
-  string password = 3;
-  string fullName = 4;
-  GENDER gender = 5;
-  PROVIDER provider = 6;
-  string avatar = 7;
-  repeated ROLE role = 8;
+  optional string id = 1;
+  optional string email = 2;
+  optional string password = 3;
+  optional string fullName = 4;
+  optional GENDER gender = 5;
+  optional PROVIDER provider = 6;
+  optional string avatar = 7;
+  repeated ROLE roles = 8;
 }
 
 message CreateUserResponse {
-  bool status = 1;
+  User user = 1;
 }
 
 message UpdateUserRequest {
-  string id = 1;
-  string email = 2;
-  string password = 3;
-  string fullName = 4;
-  GENDER gender = 5;
-  PROVIDER provider = 6;
-  string avatar = 7;
-  repeated ROLE role = 8;
+  optional string id = 1;
+  optional string email = 2;
+  optional string password = 3;
+  optional string fullName = 4;
+  optional GENDER gender = 5;
+  optional PROVIDER provider = 6;
+  optional string avatar = 7;
+  repeated ROLE roles = 8;
 }
 
 message UpdateUserResponse {
-  bool status = 1;
+  bool success = 1;
 }
 
 message DeleteUserRequest {
@@ -67,7 +65,7 @@ message DeleteUserRequest {
 }
 
 message DeleteUserResponse {
-  bool status = 1;
+  bool success = 1;
 }
 
 message GetUserByIdRequest {
@@ -79,16 +77,50 @@ message GetUserByIdResponse {
 }
 
 message GetUserByCredentialsRequest {
-  string email = 1;
-  string password = 2;
+  optional string email = 1;
+  optional string password = 2;
 }
 
 message GetUserByCredentialsResponse {
   User user = 1;
 }
 
+message GetAllUsersFilter {
+  optional string id = 1;
+  optional string email = 2;
+  optional string password = 3;
+  optional string fullName = 4;
+  optional GENDER gender = 5;
+  optional PROVIDER provider = 6;
+  optional string avatar = 7;
+  repeated ROLE roles = 8;
+}
+
+message GetAllUsersParams {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message GetAllUsersRequest {
+  optional GetAllUsersFilter filter = 1;
+  optional GetAllUsersParams params = 2;
+}
+
 message GetAllUsersResponse {
-  repeated User users = 1;
+  repeated User data = 1;
+  optional int32 total = 2;
+  optional int32 page = 3;
+  optional int32 limit = 4;
+  optional int32 totalPages = 5;
+}
+
+message VerifyUserCredentialsRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message VerifyUserCredentialsResponse {
+  User user = 1;
 }
 
 service UserService {
@@ -97,5 +129,6 @@ service UserService {
   rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
   rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
   rpc GetUserByCredentials (GetUserByCredentialsRequest) returns (GetUserByCredentialsResponse);
-  rpc GetAllUsers (google.protobuf.Empty) returns (GetAllUsersResponse);
+  rpc GetAllUsers (GetAllUsersRequest) returns (GetAllUsersResponse);
+  rpc VerifyUserCredentials (VerifyUserCredentialsRequest) returns (VerifyUserCredentialsResponse);
 }

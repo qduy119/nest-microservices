@@ -1,41 +1,61 @@
 import {
-  CreateUserDto,
-  UpdateUserDto,
-  USER_PACKAGE,
-  IUserService,
-  GetUserByIdDto,
-  DeleteUserDto
-} from '@app/shared';
+  CreateUserRequest,
+  CreateUserResponse,
+  DeleteUserRequest,
+  DeleteUserResponse,
+  GetAllUsersRequest,
+  GetAllUsersResponse,
+  GetUserByCredentialsRequest,
+  GetUserByCredentialsResponse,
+  GetUserByIdRequest,
+  GetUserByIdResponse,
+  UpdateUserRequest,
+  UpdateUserResponse,
+  USER_PACKAGE_NAME,
+  USER_SERVICE_NAME,
+  UserServiceClient,
+  VerifyUserCredentialsRequest,
+  VerifyUserCredentialsResponse
+} from '@app/shared/proto/user';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
 @Injectable()
-export class UserClientService implements OnModuleInit {
-  private userService: IUserService;
+export class UserService implements OnModuleInit, UserServiceClient {
+  private userService: UserServiceClient;
 
-  constructor(@Inject(USER_PACKAGE) private client: ClientGrpc) {}
+  constructor(@Inject(USER_PACKAGE_NAME) private readonly client: ClientGrpc) {}
 
   onModuleInit() {
-    this.userService = this.client.getService<IUserService>('UserService');
+    this.userService =
+      this.client.getService<UserServiceClient>(USER_SERVICE_NAME);
   }
 
-  async create(createUserDto: CreateUserDto) {
-    return await this.userService.createUser(createUserDto);
+  updateUser(request: UpdateUserRequest): Observable<UpdateUserResponse> {
+    return this.userService.updateUser(request);
   }
-
-  async findAll() {
-    return await this.userService.getAllUsers();
+  createUser(request: CreateUserRequest): Observable<CreateUserResponse> {
+    return this.userService.createUser(request);
   }
-
-  async findOne(getUserByIdDto: GetUserByIdDto) {
-    return await this.userService.getUserById(getUserByIdDto);
+  deleteUser(request: DeleteUserRequest): Observable<DeleteUserResponse> {
+    return this.userService.deleteUser(request);
   }
-
-  async update(updateUserDto: UpdateUserDto) {
-    return await this.userService.updateUser(updateUserDto);
+  getUserById(request: GetUserByIdRequest): Observable<GetUserByIdResponse> {
+    return this.userService.getUserById(request);
   }
-
-  async remove(deleteUserDto: DeleteUserDto) {
-    return await this.userService.deleteUser(deleteUserDto);
+  getUserByCredentials(
+    request: GetUserByCredentialsRequest
+  ): Observable<GetUserByCredentialsResponse> {
+    return this.userService.getUserByCredentials(request);
+  }
+  getAllUsers(request: GetAllUsersRequest): Observable<GetAllUsersResponse> {
+    return this.userService.getAllUsers(request);
+  }
+  verifyUserCredentials(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    request: VerifyUserCredentialsRequest
+  ): Observable<VerifyUserCredentialsResponse> {
+    throw new Error('Method not implemented.');
   }
 }

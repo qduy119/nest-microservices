@@ -5,7 +5,10 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
-    "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
+    "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
+    "plugins": [
+      "@nestjs/swagger"
+    ]
   },
   "monorepo": true,
   "root": "apps/api-gateway",
@@ -18,20 +21,9 @@
       "compilerOptions": {
         "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
         "assets": [
-          {
-            "include": "./config/*.yaml",
-            "watchAssets": true
-          }
-        ]
-      }
-    },
-    "user": {
-      "type": "application",
-      "root": "apps/user",
-      "entryFile": "main",
-      "sourceRoot": "apps/user/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/user/tsconfig.app.json"
+          "./config/*.yaml"
+        ],
+        "watchAssets": true
       }
     },
     "shared": {
@@ -42,7 +34,8 @@
       "compilerOptions": {
         "tsConfigPath": "libs/shared/tsconfig.lib.json",
         "assets": [
-          "**/*.proto"
+          "./config/*.yaml",
+          "proto/*.proto"
         ],
         "watchAssets": true
       }
@@ -56,13 +49,95 @@
         "tsConfigPath": "libs/utils/tsconfig.lib.json"
       }
     },
+    "user": {
+      "type": "application",
+      "root": "apps/user",
+      "entryFile": "main",
+      "sourceRoot": "apps/user/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/user/tsconfig.app.json",
+        "assets": [
+          "./config/*.yaml"
+        ],
+        "watchAssets": true
+      }
+    },
     "auth": {
       "type": "application",
       "root": "apps/auth",
       "entryFile": "main",
       "sourceRoot": "apps/auth/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/auth/tsconfig.app.json"
+        "tsConfigPath": "apps/auth/tsconfig.app.json",
+        "assets": [
+          "./config/*.yaml"
+        ],
+        "watchAssets": true
+      }
+    },
+    "item": {
+      "type": "application",
+      "root": "apps/item",
+      "entryFile": "main",
+      "sourceRoot": "apps/item/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/item/tsconfig.app.json",
+        "assets": [
+          "./config/*.yaml"
+        ],
+        "watchAssets": true
+      }
+    },
+    "order": {
+      "type": "application",
+      "root": "apps/order",
+      "entryFile": "main",
+      "sourceRoot": "apps/order/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/order/tsconfig.app.json",
+        "assets": [
+          "./config/*.yaml"
+        ],
+        "watchAssets": true
+      }
+    },
+    "payment": {
+      "type": "application",
+      "root": "apps/payment",
+      "entryFile": "main",
+      "sourceRoot": "apps/payment/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/payment/tsconfig.app.json",
+        "assets": [
+          "./config/*.yaml"
+        ],
+        "watchAssets": true
+      }
+    },
+    "cart": {
+      "type": "application",
+      "root": "apps/cart",
+      "entryFile": "main",
+      "sourceRoot": "apps/cart/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/cart/tsconfig.app.json",
+        "assets": [
+          "./config/*.yaml"
+        ],
+        "watchAssets": true
+      }
+    },
+    "notification": {
+      "type": "application",
+      "root": "apps/notification",
+      "entryFile": "main",
+      "sourceRoot": "apps/notification/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/notification/tsconfig.app.json",
+        "assets": [
+          "./config/*.yaml"
+        ],
+        "watchAssets": true
       }
     }
   }

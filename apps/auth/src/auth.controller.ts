@@ -1,24 +1,52 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { GrpcMethod } from '@nestjs/microservices';
-import { LoginReqDto, RefreshTokenDto, VerifyTokenDto } from '@app/shared';
+import {
+  AuthServiceController,
+  AuthServiceControllerMethods,
+  LoginRequest,
+  LoginResponse,
+  RefreshTokenRequest,
+  RefreshTokenResponse,
+  RegisterRequest,
+  RegisterResponse,
+  VerifyTokenRequest,
+  VerifyTokenResponse
+} from '@app/shared/proto/auth';
+import { Observable } from 'rxjs';
+import { CatchRpcExceptionFilter } from '@app/shared';
 
-@Controller()
-export class AuthController {
+@UseFilters(CatchRpcExceptionFilter)
+@AuthServiceControllerMethods()
+@Controller('auth')
+export class AuthController implements AuthServiceController {
   constructor(private readonly authService: AuthService) {}
-
-  @GrpcMethod('AuthService')
-  async login(data: LoginReqDto) {
-    return await this.authService.login(data);
+  login(
+    request: LoginRequest
+  ): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse {
+    return this.authService.login(request);
   }
-
-  @GrpcMethod('AuthService')
-  async refreshToken(data: RefreshTokenDto) {
-    return await this.authService.refresh(data.refreshToken);
+  register(
+    request: RegisterRequest
+  ):
+    | Promise<RegisterResponse>
+    | Observable<RegisterResponse>
+    | RegisterResponse {
+    return this.authService.register(request);
   }
-
-  @GrpcMethod('AuthService')
-  async verifyToken(data: VerifyTokenDto) {
-    return await this.authService.verify(data.accessToken);
+  refreshToken(
+    request: RefreshTokenRequest
+  ):
+    | Promise<RefreshTokenResponse>
+    | Observable<RefreshTokenResponse>
+    | RefreshTokenResponse {
+    return this.authService.refresh(request);
+  }
+  verifyToken(
+    request: VerifyTokenRequest
+  ):
+    | Promise<VerifyTokenResponse>
+    | Observable<VerifyTokenResponse>
+    | VerifyTokenResponse {
+    return this.authService.verify(request);
   }
 }
