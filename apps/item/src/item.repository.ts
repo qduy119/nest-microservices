@@ -5,8 +5,18 @@ import { ITEM_MODEL } from './di-token';
 import { RpcException } from '@nestjs/microservices';
 import { status } from '@grpc/grpc-js';
 
+export interface IItemRepository extends IRepository<ItemModel> {
+  decreaseQuantity({
+    itemId,
+    quantity
+  }: {
+    itemId: number;
+    quantity: number;
+  }): Promise<{ success: boolean }>;
+}
+
 @Injectable()
-export class ItemRepository implements IRepository<ItemModel> {
+export class ItemRepository implements IItemRepository {
   constructor(
     @Inject(ITEM_MODEL) private readonly itemModel: typeof ItemModel
   ) {}

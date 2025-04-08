@@ -19,21 +19,78 @@ export interface DecreaseQuantityResponse {
   success: boolean;
 }
 
+export interface Item {
+  id: number;
+  thumbnail: string;
+  name: string;
+  description: string;
+  price: number;
+  discount: number;
+  stock: number;
+  images: string[];
+  rating: number;
+}
+
+export interface SearchItemRequest {
+  index: string;
+  query: string;
+  fields: string[];
+  limit: number;
+  offset: number;
+}
+
+export interface SearchItemResponse {
+  items: Item[];
+}
+
+export interface CreateIndexRequest {
+  index: string;
+  documents: Item[];
+}
+
+export interface CreateIndexResponse {
+}
+
+export interface GetAllItemsRequest {
+}
+
+export interface GetAllItemsResponse {
+  items: Item[];
+}
+
 export const ITEM_PACKAGE_NAME = "item";
 
 export interface ItemServiceClient {
   decreaseQuantity(request: DecreaseQuantityRequest): Observable<DecreaseQuantityResponse>;
+
+  searchItem(request: SearchItemRequest): Observable<SearchItemResponse>;
+
+  createIndex(request: CreateIndexRequest): Observable<CreateIndexResponse>;
+
+  getAll(request: GetAllItemsRequest): Observable<GetAllItemsResponse>;
 }
 
 export interface ItemServiceController {
   decreaseQuantity(
     request: DecreaseQuantityRequest,
   ): Promise<DecreaseQuantityResponse> | Observable<DecreaseQuantityResponse> | DecreaseQuantityResponse;
+
+  searchItem(
+    request: SearchItemRequest,
+  ): Promise<SearchItemResponse> | Observable<SearchItemResponse> | SearchItemResponse;
+
+  createIndex(
+    request: CreateIndexRequest,
+  ): Promise<CreateIndexResponse> | Observable<CreateIndexResponse> | CreateIndexResponse;
+
+  getAll(
+    request: GetAllItemsRequest,
+  ): Promise<GetAllItemsResponse> | Observable<GetAllItemsResponse> | GetAllItemsResponse;
 }
 
 export function ItemServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["decreaseQuantity"];
+    const grpcMethods: string[] = ["decreaseQuantity", "searchItem", "createIndex", "getAll"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("ItemService", method)(constructor.prototype[method], method, descriptor);

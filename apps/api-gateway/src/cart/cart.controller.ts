@@ -1,11 +1,12 @@
 import { Controller, Post, Body, Inject, HttpCode } from '@nestjs/common';
-import { AddToCartDto, IUserEntity, ROLE } from '@app/shared';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AddToCartDto, ICartEntity, IUserEntity, ROLE } from '@app/shared';
+import { ApiBearerAuth, ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { CartServiceClient } from '@app/shared/proto/cart';
 import { CART_SERVICE_CLIENT } from './di-token';
 import { Roles, User } from '../decorators';
 import { firstValueFrom } from 'rxjs';
 
+@ApiExtraModels(ICartEntity)
 @ApiTags('Cart')
 @ApiBearerAuth()
 @Controller('cart')

@@ -1,7 +1,7 @@
 import { ApiSchema } from '@nestjs/swagger';
 
-@ApiSchema({ name: 'OrderSchema' })
-export class IOrderItem {
+@ApiSchema({ name: 'OrderItemSchema' })
+export class IOrderItemEntity {
   id: string;
   quantity: number;
   price: number;

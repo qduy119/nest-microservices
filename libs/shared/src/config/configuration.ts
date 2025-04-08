@@ -43,6 +43,12 @@ export type ShareConfig = {
     host: string;
     port: number;
   };
+  elastic_rabbitmq: {
+    host: string;
+    port: number;
+    username: string;
+    password: string;
+  };
 };
 
 export default () => {

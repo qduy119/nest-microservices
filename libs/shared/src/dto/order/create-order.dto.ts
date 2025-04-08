@@ -1,7 +1,12 @@
+import { IsNotEmpty } from 'class-validator';
+
+interface IOrderItem {
+  quantity: number;
+  price: number;
+  itemId: number;
+}
+
 export class CreateOrderDto {
-  orderItems: {
-    quantity: number;
-    price: number;
-    itemId: number;
-  }[];
+  @IsNotEmpty()
+  orderItems: IOrderItem[];
 }

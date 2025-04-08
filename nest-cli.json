@@ -139,6 +139,19 @@
         ],
         "watchAssets": true
       }
+    },
+    "elasticsearch": {
+      "type": "application",
+      "root": "apps/elasticsearch",
+      "entryFile": "main",
+      "sourceRoot": "apps/elasticsearch/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/elasticsearch/tsconfig.app.json",
+        "assets": [
+          "./config/*.yaml"
+        ],
+        "watchAssets": true
+      }
     }
   }
 }

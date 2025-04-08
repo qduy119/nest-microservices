@@ -16,6 +16,7 @@ services:
       - mongodb_payment
       - rabbitmq_order
       - kafka_notification
+      - rabbitmq_elastic
     networks:
       - app_network
 
@@ -115,10 +116,22 @@ services:
     networks:
       - app_network
 
+  rabbitmq_elastic:
+    image: rabbitmq:4-management
+    container_name: rabbitmq_elastic
+    ports:
+      - '5673:5672'
+      - '15673:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: password
+    networks:
+      - app_network
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
-    tmpfs: "/datalog"
+    tmpfs: '/datalog'
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
     ports:
@@ -156,4 +169,3 @@ volumes:
 networks:
   app_network:
     driver: bridge
-  

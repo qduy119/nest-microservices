@@ -11,6 +11,46 @@ message DecreaseQuantityResponse {
   bool success = 1;
 }
 
+message Item {
+  int32 id = 1;
+  string thumbnail = 2;
+  string name = 3;
+  string description = 4;
+  float price = 5;
+  float discount = 6;
+  int32 stock = 7;
+  repeated string images = 8;
+  float rating = 9;
+}
+
+message SearchItemRequest {
+  string index = 1;
+  string query = 2;
+  repeated string fields = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message SearchItemResponse {
+  repeated Item items = 1;
+}
+
+message CreateIndexRequest {
+  string index = 1;
+  repeated Item documents = 2;
+}
+
+message CreateIndexResponse {}
+
+message GetAllItemsRequest {}
+
+message GetAllItemsResponse {
+  repeated Item items = 1;
+}
+
 service ItemService {
   rpc DecreaseQuantity (DecreaseQuantityRequest) returns (DecreaseQuantityResponse);
+  rpc SearchItem (SearchItemRequest) returns (SearchItemResponse);
+  rpc CreateIndex (CreateIndexRequest) returns (CreateIndexResponse);
+  rpc GetAll (GetAllItemsRequest) returns (GetAllItemsResponse);
 }

@@ -4,7 +4,7 @@ import { ShareConfig, ShareConfigModule, userGrpcOption } from '@app/shared';
 import { UserController } from './user.controller';
 import { USER_PACKAGE_NAME } from '@app/shared/proto/user';
 import { ConfigService } from '@nestjs/config';
-import { userServiceProviders } from './user.providers';
+import { userProviders } from './user.providers';
 
 @Module({
   imports: [
@@ -28,6 +28,6 @@ import { userServiceProviders } from './user.providers';
     ])
   ],
   controllers: [UserController],
-  providers: [...userServiceProviders]
+  providers: [...userProviders]
 })
 export class UserModule {}

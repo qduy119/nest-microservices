@@ -1,0 +1,4 @@
+elasticsearch:
+  username: elastic
+  password: zLaKnPrPWjOy6eACT5anMxdi
+  url: https://f4a460361caa450f82743d2a29957293.us-central1.gcp.cloud.es.io:443

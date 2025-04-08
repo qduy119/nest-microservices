@@ -22,9 +22,10 @@ import { USER_SERVICE_CLIENT } from './di-token';
 import { UserServiceClient } from '@app/shared/proto/user';
 import { Roles, User } from '../decorators';
 import { firstValueFrom } from 'rxjs';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 
+@ApiExtraModels(IUserEntity)
 @ApiTags('User')
 @ApiBearerAuth()
 @Controller('user')

@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
-import { OrderService } from './order.service';
 import { OrderController } from './order.controller';
-import { cartProviders } from './order.providers';
+import { orderProviders } from './order.providers';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ORDER_PACKAGE_NAME } from '@app/shared/proto/order';
 import { ConfigService } from '@nestjs/config';
@@ -29,6 +28,6 @@ import { orderGrpcOption, ShareConfig, ShareConfigModule } from '@app/shared';
     ])
   ],
   controllers: [OrderController],
-  providers: [OrderService, ...cartProviders]
+  providers: [...orderProviders]
 })
 export class OrderModule {}

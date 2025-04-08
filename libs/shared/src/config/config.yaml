@@ -35,3 +35,9 @@ payment_rabbitmq:
 notification_kafka:
   host: kafka_notification
   port: 9092
+
+elastic_rabbitmq:
+  host: rabbitmq_elastic
+  port: 5672
+  username: admin
+  password: password
