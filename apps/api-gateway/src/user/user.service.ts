@@ -13,16 +13,14 @@ import {
   UpdateUserResponse,
   USER_PACKAGE_NAME,
   USER_SERVICE_NAME,
-  UserServiceClient,
-  VerifyUserCredentialsRequest,
-  VerifyUserCredentialsResponse
+  UserServiceClient
 } from '@app/shared/proto/user';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class UserService implements OnModuleInit, UserServiceClient {
+export class UserService implements OnModuleInit {
   private userService: UserServiceClient;
 
   constructor(@Inject(USER_PACKAGE_NAME) private readonly client: ClientGrpc) {}
@@ -51,11 +49,5 @@ export class UserService implements OnModuleInit, UserServiceClient {
   }
   getAllUsers(request: GetAllUsersRequest): Observable<GetAllUsersResponse> {
     return this.userService.getAllUsers(request);
-  }
-  verifyUserCredentials(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    request: VerifyUserCredentialsRequest
-  ): Observable<VerifyUserCredentialsResponse> {
-    throw new Error('Method not implemented.');
   }
 }

@@ -10,7 +10,7 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class CartService implements OnModuleInit, CartServiceClient {
+export class CartService implements OnModuleInit {
   private cartService: CartServiceClient;
 
   constructor(@Inject(CART_PACKAGE_NAME) private readonly client: ClientGrpc) {}

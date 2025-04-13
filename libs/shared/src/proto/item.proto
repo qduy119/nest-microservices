@@ -2,15 +2,6 @@ syntax = "proto3";
 
 package item;
 
-message DecreaseQuantityRequest {
-  int32 itemId = 2;
-  int32 quantity = 3;
-}
-
-message DecreaseQuantityResponse {
-  bool success = 1;
-}
-
 message Item {
   int32 id = 1;
   string thumbnail = 2;
@@ -49,7 +40,6 @@ message GetAllItemsResponse {
 }
 
 service ItemService {
-  rpc DecreaseQuantity (DecreaseQuantityRequest) returns (DecreaseQuantityResponse);
   rpc SearchItem (SearchItemRequest) returns (SearchItemResponse);
   rpc CreateIndex (CreateIndexRequest) returns (CreateIndexResponse);
   rpc GetAll (GetAllItemsRequest) returns (GetAllItemsResponse);

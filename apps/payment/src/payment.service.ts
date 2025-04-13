@@ -11,7 +11,16 @@ export class PaymentService {
   ) {}
 
   async createPayment(payload: CreateOrderEvent) {
-    const data = await this.paymentRepository.create(payload);
+    const { orderId, total, userId } = payload;
+    const data = await this.paymentRepository.create({
+      orderId,
+      total,
+      userId
+    });
     return data;
+  }
+
+  async updatePayment(id: string, payload: Partial<Payment>) {
+    return this.paymentRepository.update(id, payload);
   }
 }

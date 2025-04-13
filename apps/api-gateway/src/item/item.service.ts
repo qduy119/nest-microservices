@@ -1,8 +1,6 @@
 import {
   CreateIndexRequest,
   CreateIndexResponse,
-  DecreaseQuantityRequest,
-  DecreaseQuantityResponse,
   GetAllItemsRequest,
   GetAllItemsResponse,
   ITEM_PACKAGE_NAME,
@@ -16,7 +14,7 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class ItemService implements OnModuleInit, ItemServiceClient {
+export class ItemService implements OnModuleInit {
   private itemService: ItemServiceClient;
 
   constructor(@Inject(ITEM_PACKAGE_NAME) private readonly client: ClientGrpc) {}
@@ -28,13 +26,6 @@ export class ItemService implements OnModuleInit, ItemServiceClient {
 
   searchItem(request: SearchItemRequest): Observable<SearchItemResponse> {
     return this.itemService.searchItem(request);
-  }
-
-  decreaseQuantity(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    request: DecreaseQuantityRequest
-  ): Observable<DecreaseQuantityResponse> {
-    throw new Error('Method not implemented.');
   }
 
   createIndex(request: CreateIndexRequest): Observable<CreateIndexResponse> {

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Inject, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth, ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import {
   CreateOrderDto,
@@ -8,9 +8,8 @@ import {
   ROLE
 } from '@app/shared';
 import { Roles, User } from '../decorators';
-import { ORDER_SERVICE_CLIENT } from './di-token';
-import { OrderServiceClient } from '@app/shared/proto/order';
 import { lastValueFrom } from 'rxjs';
+import { OrderService } from './order.service';
 
 @ApiExtraModels(IOrderEntity)
 @ApiExtraModels(IOrderItemEntity)
@@ -18,10 +17,7 @@ import { lastValueFrom } from 'rxjs';
 @ApiBearerAuth()
 @Controller('order')
 export class OrderController {
-  constructor(
-    @Inject(ORDER_SERVICE_CLIENT)
-    private readonly orderServiceClient: OrderServiceClient
-  ) {}
+  constructor(private readonly orderServiceClient: OrderService) {}
 
   @Roles(ROLE.USER)
   @Post()

@@ -49,6 +49,18 @@ export type ShareConfig = {
     username: string;
     password: string;
   };
+  item_rabbitmq: {
+    host: string;
+    port: number;
+    username: string;
+    password: string;
+  };
+  order_rabbitmq: {
+    host: string;
+    port: number;
+    username: string;
+    password: string;
+  };
 };
 
 export default () => {

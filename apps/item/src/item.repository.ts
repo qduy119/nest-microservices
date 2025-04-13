@@ -13,6 +13,13 @@ export interface IItemRepository extends IRepository<ItemModel> {
     itemId: number;
     quantity: number;
   }): Promise<{ success: boolean }>;
+  increaseQuantity({
+    itemId,
+    quantity
+  }: {
+    itemId: number;
+    quantity: number;
+  }): Promise<{ success: boolean }>;
 }
 
 @Injectable()
@@ -75,6 +82,29 @@ export class ItemRepository implements IItemRepository {
         return { success: rowsUpdate > 0 };
       });
       return result;
+    } catch (error) {
+      throw new RpcException({ message: error.message });
+    }
+  }
+  async increaseQuantity({
+    itemId,
+    quantity
+  }: {
+    itemId: number;
+    quantity: number;
+  }) {
+    try {
+      const item = await this.itemModel.findOne({
+        where: { id: itemId },
+        attributes: ['stock']
+      });
+      const [rowsUpdate] = await this.itemModel.update(
+        {
+          stock: item.stock + quantity
+        },
+        { where: { id: itemId } }
+      );
+      return { success: rowsUpdate > 0 };
     } catch (error) {
       throw new RpcException({ message: error.message });
     }

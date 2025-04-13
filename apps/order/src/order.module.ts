@@ -3,9 +3,9 @@ import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 import { orderProviders } from './order.providers';
 import { AppConfigModule } from './config';
-import { orderQueue, ShareConfig, ShareConfigModule } from '@app/shared';
+import { itemQueue, ShareConfig, ShareConfigModule } from '@app/shared';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ORDER_SERVICE_RABBITMQ } from './di-token';
+import { ORDER_SERVICE_ITEM_RABBITMQ } from './di-token';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseModule } from './databases';
 
@@ -16,18 +16,16 @@ import { DatabaseModule } from './databases';
     DatabaseModule,
     ClientsModule.registerAsync([
       {
-        name: ORDER_SERVICE_RABBITMQ,
+        name: ORDER_SERVICE_ITEM_RABBITMQ,
         inject: [ConfigService],
         useFactory: (configService: ConfigService) => {
           const { host, port, username, password } =
-            configService.get<ShareConfig['payment_rabbitmq']>(
-              'payment_rabbitmq'
-            );
+            configService.get<ShareConfig['item_rabbitmq']>('item_rabbitmq');
           return {
             transport: Transport.RMQ,
             options: {
               urls: [`amqp://${username}:${password}@${host}:${port}`],
-              queue: orderQueue,
+              queue: itemQueue,
               noAck: true,
               queueOptions: {
                 durable: false

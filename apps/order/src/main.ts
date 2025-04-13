@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { OrderModule } from './order.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { orderGrpcOption, ShareConfig } from '@app/shared';
+import { orderGrpcOption, orderQueue, ShareConfig } from '@app/shared';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
@@ -9,7 +9,15 @@ async function bootstrap() {
   const { host, port } = context
     .get(ConfigService)
     .get<ShareConfig['order_grpc']>('order_grpc');
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+  const {
+    host: orderHost,
+    port: orderPort,
+    username,
+    password
+  } = context
+    .get(ConfigService)
+    .get<ShareConfig['order_rabbitmq']>('order_rabbitmq');
+  const appGrpc = await NestFactory.createMicroservice<MicroserviceOptions>(
     OrderModule,
     {
       transport: Transport.GRPC,
@@ -19,6 +27,21 @@ async function bootstrap() {
       }
     }
   );
-  await app.listen();
+  const appRabbitmq = await NestFactory.createMicroservice<MicroserviceOptions>(
+    OrderModule,
+    {
+      transport: Transport.RMQ,
+      options: {
+        urls: [`amqp://${username}:${password}@${orderHost}:${orderPort}`],
+        queue: orderQueue,
+        noAck: false,
+        queueOptions: {
+          durable: false
+        }
+      }
+    }
+  );
+  await appGrpc.listen();
+  await appRabbitmq.listen();
 }
 bootstrap();

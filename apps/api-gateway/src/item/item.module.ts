@@ -4,7 +4,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ITEM_PACKAGE_NAME } from '@app/shared/proto/item';
 import { ConfigService } from '@nestjs/config';
 import { itemGrpcOption, ShareConfig, ShareConfigModule } from '@app/shared';
-import { itemProviders } from './item.providers';
+import { ItemService } from './item.service';
 
 @Module({
   imports: [
@@ -28,6 +28,6 @@ import { itemProviders } from './item.providers';
     ])
   ],
   controllers: [ItemController],
-  providers: [...itemProviders]
+  providers: [ItemService]
 })
 export class ItemModule {}

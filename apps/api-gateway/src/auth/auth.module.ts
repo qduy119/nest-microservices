@@ -4,7 +4,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { authGrpcOption, ShareConfig, ShareConfigModule } from '@app/shared';
 import { AUTH_PACKAGE_NAME } from '@app/shared/proto/auth';
 import { ConfigService } from '@nestjs/config';
-import { authServiceProviders } from './auth.providers';
+import { AuthService } from './auth.service';
 
 @Module({
   imports: [
@@ -28,6 +28,6 @@ import { authServiceProviders } from './auth.providers';
     ])
   ],
   controllers: [AuthController],
-  providers: [...authServiceProviders]
+  providers: [AuthService]
 })
 export class AuthModule {}

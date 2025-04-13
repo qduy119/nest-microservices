@@ -1,1 +1,0 @@
-export const ORDER_SERVICE_CLIENT = Symbol.for('ORDER_SERVICE_CLIENT');

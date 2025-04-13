@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { CartController } from './cart.controller';
-import { cartProviders } from './cart.providers';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { CART_PACKAGE_NAME } from '@app/shared/proto/cart';
 import { ConfigService } from '@nestjs/config';
 import { cartGrpcOption, ShareConfig, ShareConfigModule } from '@app/shared';
+import { CartService } from './cart.service';
 
 @Module({
   imports: [
@@ -28,6 +28,6 @@ import { cartGrpcOption, ShareConfig, ShareConfigModule } from '@app/shared';
     ])
   ],
   controllers: [CartController],
-  providers: [...cartProviders]
+  providers: [CartService]
 })
 export class CartModule {}

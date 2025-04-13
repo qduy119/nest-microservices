@@ -1,19 +1,15 @@
-import { Body, Controller, Get, HttpCode, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { LoginReqDto, RegisterReqDto, ROLE } from '@app/shared';
 import { Cookies, Public, Roles } from '../decorators';
-import { AUTH_SERVICE_CLIENT } from './di-token';
-import { AuthServiceClient } from '@app/shared/proto/auth';
 import { firstValueFrom } from 'rxjs';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthService } from './auth.service';
 
 @ApiTags('Auth')
 @ApiBearerAuth()
 @Controller('auth')
 export class AuthController {
-  constructor(
-    @Inject(AUTH_SERVICE_CLIENT)
-    private readonly authClientService: AuthServiceClient
-  ) {}
+  constructor(private readonly authClientService: AuthService) {}
 
   @Public()
   @Post('login')

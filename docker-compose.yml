@@ -128,6 +128,18 @@ services:
     networks:
       - app_network
 
+  rabbitmq_item:
+    image: rabbitmq:4-management
+    container_name: rabbitmq_item
+    ports:
+      - '5674:5672'
+      - '15674:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: password
+    networks:
+      - app_network
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper

@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { PaymentModule } from './payment.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
-import { orderQueue, ShareConfig } from '@app/shared';
+import { paymentQueue, ShareConfig } from '@app/shared';
 
 async function bootstrap() {
   const context = await NestFactory.createApplicationContext(PaymentModule);
@@ -16,7 +16,7 @@ async function bootstrap() {
       transport: Transport.RMQ,
       options: {
         urls: [`amqp://${username}:${password}@${host}:${port}`],
-        queue: orderQueue,
+        queue: paymentQueue,
         noAck: false,
         queueOptions: {
           durable: false

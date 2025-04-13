@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  Inject,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -18,22 +17,18 @@ import {
   ROLE,
   UpdateUserDto
 } from '@app/shared';
-import { USER_SERVICE_CLIENT } from './di-token';
-import { UserServiceClient } from '@app/shared/proto/user';
 import { Roles, User } from '../decorators';
 import { firstValueFrom } from 'rxjs';
 import { ApiBearerAuth, ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
+import { UserService } from './user.service';
 
 @ApiExtraModels(IUserEntity)
 @ApiTags('User')
 @ApiBearerAuth()
 @Controller('user')
 export class UserController {
-  constructor(
-    @Inject(USER_SERVICE_CLIENT)
-    private readonly userServiceClient: UserServiceClient
-  ) {}
+  constructor(private readonly userServiceClient: UserService) {}
 
   @Roles(ROLE.ADMIN)
   @Post()

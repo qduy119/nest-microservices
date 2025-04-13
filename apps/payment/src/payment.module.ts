@@ -3,9 +3,17 @@ import { PaymentController } from './payment.controller';
 import { PaymentService } from './payment.service';
 import { paymentProviders } from './payment.providers';
 import { AppConfigModule } from './config';
-import { ShareConfig, ShareConfigModule, userGrpcOption } from '@app/shared';
+import {
+  itemQueue,
+  ShareConfig,
+  ShareConfigModule,
+  userGrpcOption
+} from '@app/shared';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { PAYMENT_SERVICE_KAFKA } from './di-token';
+import {
+  PAYMENT_SERVICE_ITEM_RABBITMQ,
+  PAYMENT_SERVICE_KAFKA
+} from './di-token';
 import { ConfigService } from '@nestjs/config';
 import { USER_PACKAGE_NAME } from '@app/shared/proto/user';
 import { DatabaseModule } from './databases';
@@ -33,9 +41,26 @@ import { DatabaseModule } from './databases';
             }
           };
         }
-      }
-    ]),
-    ClientsModule.registerAsync([
+      },
+      {
+        name: PAYMENT_SERVICE_ITEM_RABBITMQ,
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => {
+          const { host, port, username, password } =
+            configService.get<ShareConfig['item_rabbitmq']>('item_rabbitmq');
+          return {
+            transport: Transport.RMQ,
+            options: {
+              urls: [`amqp://${username}:${password}@${host}:${port}`],
+              queue: itemQueue,
+              noAck: true,
+              queueOptions: {
+                durable: false
+              }
+            }
+          };
+        }
+      },
       {
         name: USER_PACKAGE_NAME,
         inject: [ConfigService],

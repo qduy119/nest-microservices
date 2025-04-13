@@ -7,16 +7,14 @@ import {
   RefreshTokenRequest,
   RefreshTokenResponse,
   RegisterRequest,
-  RegisterResponse,
-  VerifyTokenRequest,
-  VerifyTokenResponse
+  RegisterResponse
 } from '@app/shared/proto/auth';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class AuthService implements OnModuleInit, AuthServiceClient {
+export class AuthService implements OnModuleInit {
   private authService: AuthServiceClient;
 
   constructor(@Inject(AUTH_PACKAGE_NAME) private readonly client: ClientGrpc) {}
@@ -34,9 +32,5 @@ export class AuthService implements OnModuleInit, AuthServiceClient {
   }
   refreshToken(request: RefreshTokenRequest): Observable<RefreshTokenResponse> {
     return this.authService.refreshToken(request);
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  verifyToken(request: VerifyTokenRequest): Observable<VerifyTokenResponse> {
-    throw new Error('Method not implemented.');
   }
 }

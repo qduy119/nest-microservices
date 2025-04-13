@@ -41,3 +41,15 @@ elastic_rabbitmq:
   port: 5672
   username: admin
   password: password
+
+item_rabbitmq:
+  host: rabbitmq_item
+  port: 5672
+  username: admin
+  password: password
+
+order_rabbitmq:
+  host: rabbitmq_order
+  port: 5672
+  username: admin
+  password: password

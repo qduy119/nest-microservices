@@ -1,35 +1,21 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Inject,
-  Post,
-  Req
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { Public } from '../decorators';
 import { CreateIndexDto, IItemEntity, SearchItemQuery } from '@app/shared';
-import { ITEM_SERVICE_CLIENT } from './di-token';
-import { ItemServiceClient } from '@app/shared/proto/item';
 import { firstValueFrom } from 'rxjs';
-import { Request } from 'express';
+import { ItemService } from './item.service';
 
 @ApiExtraModels(IItemEntity)
 @ApiBearerAuth()
 @ApiTags('Item')
 @Controller('item')
 export class ItemController {
-  constructor(
-    @Inject(ITEM_SERVICE_CLIENT)
-    private readonly itemServiceClient: ItemServiceClient
-  ) {}
+  constructor(private readonly itemServiceClient: ItemService) {}
 
   @Public()
   @Get('search-elastic')
   @HttpCode(200)
-  search(@Req() req: Request) {
-    const query = req.query as unknown as SearchItemQuery;
+  search(@Query() query: SearchItemQuery) {
     const data = this.itemServiceClient.searchItem(query);
     return firstValueFrom(data);
   }

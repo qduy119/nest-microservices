@@ -1,1 +1,1 @@
-export const SEND_NOTIFICATION_EVENT = 'send-notification';
+export const SEND_NOTIFICATION_EVENT = 'send-notification-event';

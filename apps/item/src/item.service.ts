@@ -20,6 +20,9 @@ export class ItemService {
   decrease({ itemId, quantity }: { itemId: number; quantity: number }) {
     return this.itemRepository.decreaseQuantity({ itemId, quantity });
   }
+  increase({ itemId, quantity }: { itemId: number; quantity: number }) {
+    return this.itemRepository.increaseQuantity({ itemId, quantity });
+  }
   search(data: {
     index: string;
     query: string;

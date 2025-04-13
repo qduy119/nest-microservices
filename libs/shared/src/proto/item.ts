@@ -10,15 +10,6 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "item";
 
-export interface DecreaseQuantityRequest {
-  itemId: number;
-  quantity: number;
-}
-
-export interface DecreaseQuantityResponse {
-  success: boolean;
-}
-
 export interface Item {
   id: number;
   thumbnail: string;
@@ -61,8 +52,6 @@ export interface GetAllItemsResponse {
 export const ITEM_PACKAGE_NAME = "item";
 
 export interface ItemServiceClient {
-  decreaseQuantity(request: DecreaseQuantityRequest): Observable<DecreaseQuantityResponse>;
-
   searchItem(request: SearchItemRequest): Observable<SearchItemResponse>;
 
   createIndex(request: CreateIndexRequest): Observable<CreateIndexResponse>;
@@ -71,10 +60,6 @@ export interface ItemServiceClient {
 }
 
 export interface ItemServiceController {
-  decreaseQuantity(
-    request: DecreaseQuantityRequest,
-  ): Promise<DecreaseQuantityResponse> | Observable<DecreaseQuantityResponse> | DecreaseQuantityResponse;
-
   searchItem(
     request: SearchItemRequest,
   ): Promise<SearchItemResponse> | Observable<SearchItemResponse> | SearchItemResponse;
@@ -90,7 +75,7 @@ export interface ItemServiceController {
 
 export function ItemServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["decreaseQuantity", "searchItem", "createIndex", "getAll"];
+    const grpcMethods: string[] = ["searchItem", "createIndex", "getAll"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("ItemService", method)(constructor.prototype[method], method, descriptor);
