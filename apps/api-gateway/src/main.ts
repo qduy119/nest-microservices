@@ -28,7 +28,11 @@ async function bootstrap() {
   });
   app.useGlobalPipes(
     new ValidationPipe({
-      exceptionFactory(errors) {
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true
+      },
+      exceptionFactory: (errors) => {
         let errorMessages = {};
         errors.forEach((error) => {
           const constraints = error.constraints;
