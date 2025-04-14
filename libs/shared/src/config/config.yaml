@@ -26,6 +26,10 @@ payment_grpc:
   host: localhost
   port: 3006
 
+file_grpc:
+  host: localhost
+  port: 3007
+
 payment_rabbitmq:
   host: rabbitmq_order
   port: 5672

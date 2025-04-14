@@ -4,6 +4,7 @@ import { AUTH_PACKAGE_NAME } from './auth';
 import { CART_PACKAGE_NAME } from './cart';
 import { ITEM_PACKAGE_NAME } from './item';
 import { ORDER_PACKAGE_NAME } from './order';
+import { UPLOAD_PACKAGE_NAME } from './upload';
 
 export const userGrpcOption = {
   package: USER_PACKAGE_NAME,
@@ -28,6 +29,11 @@ export const itemGrpcOption = {
 export const orderGrpcOption = {
   package: ORDER_PACKAGE_NAME,
   protoPath: resolve(__dirname, '../../libs/shared/proto/order.proto')
+};
+
+export const fileGrpcOption = {
+  package: UPLOAD_PACKAGE_NAME,
+  protoPath: resolve(__dirname, '../../libs/shared/proto/upload.proto')
 };
 
 export * from './mapping';

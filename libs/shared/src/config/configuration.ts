@@ -33,6 +33,10 @@ export type ShareConfig = {
     host: string;
     port: number;
   };
+  file_grpc: {
+    host: string;
+    port: number;
+  };
   payment_rabbitmq: {
     host: string;
     port: number;

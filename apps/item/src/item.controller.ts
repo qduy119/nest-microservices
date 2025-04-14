@@ -3,6 +3,8 @@ import { ItemService } from './item.service';
 import {
   CreateIndexRequest,
   CreateIndexResponse,
+  CreateItemRequest,
+  CreateItemResponse,
   GetAllItemsRequest,
   GetAllItemsResponse,
   ItemServiceController,
@@ -10,7 +12,7 @@ import {
   SearchItemRequest,
   SearchItemResponse
 } from '@app/shared/proto/item';
-import { from, Observable } from 'rxjs';
+import { from, map, Observable } from 'rxjs';
 import {
   CatchRpcExceptionFilter,
   CREATE_ORDER_ITEM_EVENT,
@@ -114,5 +116,15 @@ export class ItemController implements ItemServiceController {
     | Observable<GetAllItemsResponse>
     | GetAllItemsResponse {
     return from(this.itemService.getAll());
+  }
+  createItem(
+    request: CreateItemRequest
+  ):
+    | Promise<CreateItemResponse>
+    | Observable<CreateItemResponse>
+    | CreateItemResponse {
+    return from(this.itemService.create(request)).pipe(
+      map((item) => ({ item }))
+    );
   }
 }

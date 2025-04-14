@@ -41,4 +41,13 @@ export class ItemService {
     const data = await this.itemRepository.findAll();
     return { items: data.data };
   }
+  async create(payload: Partial<Item>) {
+    const created = await this.itemRepository.create(payload);
+    const elasticItem = {
+      index: 'products',
+      documents: [created]
+    };
+    this.client.emit(ELASTIC_CREATE_INDEX_EVENT, { ...elasticItem });
+    return created;
+  }
 }

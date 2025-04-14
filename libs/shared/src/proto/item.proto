@@ -39,8 +39,23 @@ message GetAllItemsResponse {
   repeated Item items = 1;
 }
 
+message CreateItemRequest {
+  string thumbnail = 1;
+  string name = 2;
+  string description = 3;
+  float price = 4;
+  float discount = 5;
+  int32 stock = 6;
+  repeated string images = 7;
+}
+
+message CreateItemResponse {
+  Item item = 1;
+}
+
 service ItemService {
   rpc SearchItem (SearchItemRequest) returns (SearchItemResponse);
   rpc CreateIndex (CreateIndexRequest) returns (CreateIndexResponse);
   rpc GetAll (GetAllItemsRequest) returns (GetAllItemsResponse);
+  rpc CreateItem (CreateItemRequest) returns (CreateItemResponse);
 }

@@ -46,6 +46,7 @@ export class ItemModel extends Model {
   images: string[];
 
   @AllowNull(false)
+  @Default(0)
   @Column(DataType.FLOAT)
   rating: number;
 }

@@ -6,9 +6,7 @@
     "deleteOutDir": true,
     "webpack": true,
     "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
-    "plugins": [
-      "@nestjs/swagger"
-    ]
+    "plugins": ["@nestjs/swagger"]
   },
   "monorepo": true,
   "root": "apps/api-gateway",
@@ -20,9 +18,7 @@
       "sourceRoot": "apps/api-gateway/src",
       "compilerOptions": {
         "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
-        "assets": [
-          "./config/*.yaml"
-        ],
+        "assets": ["./config/*.yaml"],
         "watchAssets": true
       }
     },
@@ -33,10 +29,7 @@
       "sourceRoot": "libs/shared/src",
       "compilerOptions": {
         "tsConfigPath": "libs/shared/tsconfig.lib.json",
-        "assets": [
-          "./config/*.yaml",
-          "proto/*.proto"
-        ],
+        "assets": ["./config/*.yaml", "proto/*.proto"],
         "watchAssets": true
       }
     },
@@ -56,9 +49,7 @@
       "sourceRoot": "apps/user/src",
       "compilerOptions": {
         "tsConfigPath": "apps/user/tsconfig.app.json",
-        "assets": [
-          "./config/*.yaml"
-        ],
+        "assets": ["./config/*.yaml"],
         "watchAssets": true
       }
     },
@@ -69,9 +60,7 @@
       "sourceRoot": "apps/auth/src",
       "compilerOptions": {
         "tsConfigPath": "apps/auth/tsconfig.app.json",
-        "assets": [
-          "./config/*.yaml"
-        ],
+        "assets": ["./config/*.yaml"],
         "watchAssets": true
       }
     },
@@ -82,9 +71,7 @@
       "sourceRoot": "apps/item/src",
       "compilerOptions": {
         "tsConfigPath": "apps/item/tsconfig.app.json",
-        "assets": [
-          "./config/*.yaml"
-        ],
+        "assets": ["./config/*.yaml"],
         "watchAssets": true
       }
     },
@@ -95,9 +82,7 @@
       "sourceRoot": "apps/order/src",
       "compilerOptions": {
         "tsConfigPath": "apps/order/tsconfig.app.json",
-        "assets": [
-          "./config/*.yaml"
-        ],
+        "assets": ["./config/*.yaml"],
         "watchAssets": true
       }
     },
@@ -108,9 +93,7 @@
       "sourceRoot": "apps/payment/src",
       "compilerOptions": {
         "tsConfigPath": "apps/payment/tsconfig.app.json",
-        "assets": [
-          "./config/*.yaml"
-        ],
+        "assets": ["./config/*.yaml"],
         "watchAssets": true
       }
     },
@@ -121,9 +104,7 @@
       "sourceRoot": "apps/cart/src",
       "compilerOptions": {
         "tsConfigPath": "apps/cart/tsconfig.app.json",
-        "assets": [
-          "./config/*.yaml"
-        ],
+        "assets": ["./config/*.yaml"],
         "watchAssets": true
       }
     },
@@ -134,9 +115,7 @@
       "sourceRoot": "apps/notification/src",
       "compilerOptions": {
         "tsConfigPath": "apps/notification/tsconfig.app.json",
-        "assets": [
-          "./config/*.yaml"
-        ],
+        "assets": ["./config/*.yaml"],
         "watchAssets": true
       }
     },
@@ -147,9 +126,18 @@
       "sourceRoot": "apps/elasticsearch/src",
       "compilerOptions": {
         "tsConfigPath": "apps/elasticsearch/tsconfig.app.json",
-        "assets": [
-          "./config/*.yaml"
-        ],
+        "assets": ["./config/*.yaml"],
+        "watchAssets": true
+      }
+    },
+    "upload": {
+      "type": "application",
+      "root": "apps/upload",
+      "entryFile": "main",
+      "sourceRoot": "apps/upload/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/upload/tsconfig.app.json",
+        "assets": ["./config/*.yaml"],
         "watchAssets": true
       }
     }

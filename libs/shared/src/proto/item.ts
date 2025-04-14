@@ -49,6 +49,20 @@ export interface GetAllItemsResponse {
   items: Item[];
 }
 
+export interface CreateItemRequest {
+  thumbnail: string;
+  name: string;
+  description: string;
+  price: number;
+  discount: number;
+  stock: number;
+  images: string[];
+}
+
+export interface CreateItemResponse {
+  item: Item | undefined;
+}
+
 export const ITEM_PACKAGE_NAME = "item";
 
 export interface ItemServiceClient {
@@ -57,6 +71,8 @@ export interface ItemServiceClient {
   createIndex(request: CreateIndexRequest): Observable<CreateIndexResponse>;
 
   getAll(request: GetAllItemsRequest): Observable<GetAllItemsResponse>;
+
+  createItem(request: CreateItemRequest): Observable<CreateItemResponse>;
 }
 
 export interface ItemServiceController {
@@ -71,11 +87,15 @@ export interface ItemServiceController {
   getAll(
     request: GetAllItemsRequest,
   ): Promise<GetAllItemsResponse> | Observable<GetAllItemsResponse> | GetAllItemsResponse;
+
+  createItem(
+    request: CreateItemRequest,
+  ): Promise<CreateItemResponse> | Observable<CreateItemResponse> | CreateItemResponse;
 }
 
 export function ItemServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["searchItem", "createIndex", "getAll"];
+    const grpcMethods: string[] = ["searchItem", "createIndex", "getAll", "createItem"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("ItemService", method)(constructor.prototype[method], method, descriptor);
