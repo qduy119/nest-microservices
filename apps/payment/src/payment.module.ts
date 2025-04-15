@@ -5,6 +5,7 @@ import { paymentProviders } from './payment.providers';
 import { AppConfigModule } from './config';
 import {
   itemQueue,
+  notificationQueue,
   ShareConfig,
   ShareConfigModule,
   userGrpcOption
@@ -12,7 +13,7 @@ import {
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import {
   PAYMENT_SERVICE_ITEM_RABBITMQ,
-  PAYMENT_SERVICE_KAFKA
+  PAYMENT_SERVICE_MAIL_RABBITMQ
 } from './di-token';
 import { ConfigService } from '@nestjs/config';
 import { USER_PACKAGE_NAME } from '@app/shared/proto/user';
@@ -25,18 +26,20 @@ import { DatabaseModule } from './databases';
     DatabaseModule,
     ClientsModule.registerAsync([
       {
-        name: PAYMENT_SERVICE_KAFKA,
+        name: PAYMENT_SERVICE_MAIL_RABBITMQ,
         inject: [ConfigService],
         useFactory: (configService: ConfigService) => {
-          const { host, port } =
-            configService.get<ShareConfig['notification_kafka']>(
-              'notification_kafka'
-            );
+          const { host, port, username, password } = configService.get<
+            ShareConfig['notification_rabbitmq']
+          >('notification_rabbitmq');
           return {
-            transport: Transport.KAFKA,
+            transport: Transport.RMQ,
             options: {
-              client: {
-                brokers: [`${host}:${port}`]
+              urls: [`amqp://${username}:${password}@${host}:${port}`],
+              queue: notificationQueue,
+              noAck: true,
+              queueOptions: {
+                durable: false
               }
             }
           };

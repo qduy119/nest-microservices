@@ -4,6 +4,7 @@ import { IElasticSearchService } from './elasticsearch-service.interface';
 import { ConfigService } from '@nestjs/config';
 import { AppConfig } from './config';
 import { RpcException } from '@nestjs/microservices';
+import { IPaginationResponse } from '@app/shared';
 
 @Injectable()
 export class ElasticsearchService implements IElasticSearchService {
@@ -42,7 +43,18 @@ export class ElasticsearchService implements IElasticSearchService {
           query
         }
       });
-      return data.hits.hits.map((item) => item._source);
+      const hits = data.hits;
+      const dataHits = hits.hits.map((item) => item._source);
+      const total =
+        typeof hits.total === 'number' ? hits.total : hits.total.value;
+      const res: IPaginationResponse<any> = {
+        data: dataHits,
+        total,
+        page: Math.floor(offset / limit) + 1,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      };
+      return res;
     } catch (err) {
       throw new RpcException(err);
     }

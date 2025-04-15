@@ -1,10 +1,5 @@
 import { Controller, Inject } from '@nestjs/common';
-import {
-  Ctx,
-  KafkaContext,
-  EventPattern,
-  Payload
-} from '@nestjs/microservices';
+import { Ctx, RmqContext, EventPattern, Payload } from '@nestjs/microservices';
 import { SEND_NOTIFICATION_EVENT, SendNotificationEvent } from '@app/shared';
 import { INotificationService } from './notification-service.interface';
 import { NOTIFICATION_SERVICE } from './di-token';
@@ -19,9 +14,17 @@ export class NotificationController {
   @EventPattern(SEND_NOTIFICATION_EVENT)
   async sendNotification(
     @Payload() payload: SendNotificationEvent,
-    @Ctx() context: KafkaContext
+    @Ctx() context: RmqContext
   ): Promise<void> {
-    console.log(payload, context.getTopic());
-    await this.notificationService.send(payload);
+    const channel = context.getChannelRef();
+    const originalMsg = context.getMessage();
+
+    try {
+      await this.notificationService.send(payload);
+      channel.ack(originalMsg);
+    } catch (error) {
+      console.log(error);
+      channel.nack(originalMsg, false, true);
+    }
   }
 }

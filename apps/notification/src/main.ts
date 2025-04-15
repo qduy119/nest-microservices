@@ -2,22 +2,25 @@ import { NestFactory } from '@nestjs/core';
 import { NotificationModule } from './notification.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
-import { ShareConfig } from '@app/shared';
+import { notificationQueue, ShareConfig } from '@app/shared';
 
 async function bootstrap() {
   const context =
     await NestFactory.createApplicationContext(NotificationModule);
-  const { host, port } = context
+  const { host, port, username, password } = context
     .get(ConfigService)
-    .get<ShareConfig['notification_kafka']>('notification_kafka');
+    .get<ShareConfig['notification_rabbitmq']>('notification_rabbitmq');
 
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     NotificationModule,
     {
-      transport: Transport.KAFKA,
+      transport: Transport.RMQ,
       options: {
-        client: {
-          brokers: [`${host}:${port}`]
+        urls: [`amqp://${username}:${password}@${host}:${port}`],
+        queue: notificationQueue,
+        noAck: false,
+        queueOptions: {
+          durable: false
         }
       }
     }

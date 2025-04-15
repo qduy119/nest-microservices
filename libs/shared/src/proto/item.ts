@@ -31,7 +31,11 @@ export interface SearchItemRequest {
 }
 
 export interface SearchItemResponse {
-  items: Item[];
+  data: Item[];
+  total?: number | undefined;
+  page?: number | undefined;
+  limit?: number | undefined;
+  totalPages?: number | undefined;
 }
 
 export interface CreateIndexRequest {

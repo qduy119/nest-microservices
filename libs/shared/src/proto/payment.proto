@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package payment;
+
+enum PAYMENT_STATUS {
+  PENDING = 0;
+  SUCCESS = 1;
+  CANCEL = 2;
+  ERROR = 3;
+}
+
+message Payment {
+  string id = 1;
+  string userId = 2;
+  string orderId = 3;
+  int32 payDate = 4;
+  string bankCode = 5;
+  string cardType = 6;
+  float total = 7;
+  PAYMENT_STATUS status = 8;
+}
+
+message GetAllPaymentsRequest {}
+
+message GetAllPaymentsResponse {
+  repeated Payment payments = 1;
+}
+
+service PaymentService {
+  rpc GetAll (GetAllPaymentsRequest) returns (GetAllPaymentsResponse);
+}

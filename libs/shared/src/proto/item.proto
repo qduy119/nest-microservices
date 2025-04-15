@@ -23,7 +23,11 @@ message SearchItemRequest {
 }
 
 message SearchItemResponse {
-  repeated Item items = 1;
+  repeated Item data = 1;
+  optional int32 total = 2;
+  optional int32 page = 3;
+  optional int32 limit = 4;
+  optional int32 totalPages = 5;
 }
 
 message CreateIndexRequest {

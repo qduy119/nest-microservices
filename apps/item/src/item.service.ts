@@ -1,21 +1,24 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ELASTIC_SERVICE_RABBITMQ, ITEM_REPOSITORY } from './di-token';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { ELASTIC_SERVICE_KAFKA, ITEM_REPOSITORY } from './di-token';
 import { IItemRepository } from './item.repository';
-import { ClientRMQ } from '@nestjs/microservices';
+import { ClientKafka } from '@nestjs/microservices';
 import {
   ELASTIC_CREATE_INDEX_EVENT,
   ELASTIC_GET_SEARCH_EVENT
 } from '@app/shared';
 import { Item } from '@app/shared/proto/item';
-import { map } from 'rxjs';
 
 @Injectable()
-export class ItemService {
+export class ItemService implements OnModuleInit {
   constructor(
     @Inject(ITEM_REPOSITORY)
     private readonly itemRepository: IItemRepository,
-    @Inject(ELASTIC_SERVICE_RABBITMQ) private readonly client: ClientRMQ
+    @Inject(ELASTIC_SERVICE_KAFKA) private readonly client: ClientKafka
   ) {}
+
+  onModuleInit() {
+    this.client.subscribeToResponseOf(ELASTIC_GET_SEARCH_EVENT);
+  }
 
   decrease({ itemId, quantity }: { itemId: number; quantity: number }) {
     return this.itemRepository.decreaseQuantity({ itemId, quantity });
@@ -30,9 +33,7 @@ export class ItemService {
     limit: number;
     offset: number;
   }) {
-    return this.client
-      .send(ELASTIC_GET_SEARCH_EVENT, { ...data })
-      .pipe(map((items) => ({ items })));
+    return this.client.send(ELASTIC_GET_SEARCH_EVENT, { ...data });
   }
   createIndex(data: { index: string; documents: Item[] }) {
     return this.client.emit(ELASTIC_CREATE_INDEX_EVENT, { ...data });

@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 @UseFilters(CatchRpcExceptionFilter)
 @UploadServiceControllerMethods()
 @Controller('upload')
-export class FileController implements UploadServiceController {
+export class UploadController implements UploadServiceController {
   constructor(private readonly fileService: UploadService) {}
 
   uploadFile(

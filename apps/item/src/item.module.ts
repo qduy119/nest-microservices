@@ -5,7 +5,6 @@ import { AppConfigModule } from './config';
 import { DatabaseModule } from './databases';
 import { itemProviders } from './item.providers';
 import {
-  elasticQueue,
   orderQueue,
   paymentQueue,
   ShareConfig,
@@ -13,7 +12,7 @@ import {
 } from '@app/shared';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import {
-  ELASTIC_SERVICE_RABBITMQ,
+  ELASTIC_SERVICE_KAFKA,
   ITEM_SERVICE_ORDER_RABBITMQ,
   ITEM_SERVICE_PAYMENT_RABBITMQ
 } from './di-token';
@@ -26,21 +25,25 @@ import { ConfigService } from '@nestjs/config';
     DatabaseModule,
     ClientsModule.registerAsync([
       {
-        name: ELASTIC_SERVICE_RABBITMQ,
+        name: ELASTIC_SERVICE_KAFKA,
         inject: [ConfigService],
         useFactory: (configService: ConfigService) => {
-          const { host, port, username, password } =
-            configService.get<ShareConfig['elastic_rabbitmq']>(
-              'elastic_rabbitmq'
-            );
+          const { host, port } = configService.get<
+            ShareConfig['elasticsearch_kafka']
+          >('elasticsearch_kafka');
           return {
-            transport: Transport.RMQ,
+            transport: Transport.KAFKA,
             options: {
-              urls: [`amqp://${username}:${password}@${host}:${port}`],
-              queue: elasticQueue,
-              noAck: true,
-              queueOptions: {
-                durable: false
+              client: {
+                clientId: 'item',
+                brokers: [`${host}:${port}`]
+              },
+              consumer: {
+                groupId: 'item-consumer-elasticsearch',
+                allowAutoTopicCreation: true
+              },
+              subscribe: {
+                fromBeginning: true
               }
             }
           };

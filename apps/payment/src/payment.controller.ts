@@ -2,7 +2,6 @@ import { Controller, Inject, OnModuleInit, UseFilters } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import {
   ClientGrpc,
-  ClientKafka,
   ClientRMQ,
   Ctx,
   EventPattern,
@@ -19,7 +18,7 @@ import {
 } from '@app/shared';
 import {
   PAYMENT_SERVICE_ITEM_RABBITMQ,
-  PAYMENT_SERVICE_KAFKA
+  PAYMENT_SERVICE_MAIL_RABBITMQ
 } from './di-token';
 import {
   USER_PACKAGE_NAME,
@@ -35,7 +34,8 @@ export class PaymentController implements OnModuleInit {
   private userClientService: UserServiceClient;
 
   constructor(
-    @Inject(PAYMENT_SERVICE_KAFKA) private readonly clientKafka: ClientKafka,
+    @Inject(PAYMENT_SERVICE_MAIL_RABBITMQ)
+    private readonly clientNotification: ClientRMQ,
     @Inject(USER_PACKAGE_NAME) private readonly clientGrpc: ClientGrpc,
     @Inject(PAYMENT_SERVICE_ITEM_RABBITMQ)
     private readonly clientItem: ClientRMQ,
@@ -61,7 +61,7 @@ export class PaymentController implements OnModuleInit {
         this.userClientService.getUserById({ id: payload.userId })
       );
       payment = await this.paymentService.createPayment(payload);
-      this.clientKafka.emit(SEND_NOTIFICATION_EVENT, {
+      this.clientNotification.emit(SEND_NOTIFICATION_EVENT, {
         subject: 'New Payment ⚡',
         content: `You have a new payment id ${payment._id}`,
         to: user.email

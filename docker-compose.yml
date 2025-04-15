@@ -15,8 +15,8 @@ services:
       - mongodb_order
       - mongodb_payment
       - rabbitmq_order
-      - kafka_notification
-      - rabbitmq_elastic
+      - rabbitmq_notification
+      - kafka_elasticsearch
     networks:
       - app_network
 
@@ -116,9 +116,9 @@ services:
     networks:
       - app_network
 
-  rabbitmq_elastic:
+  rabbitmq_notification:
     image: rabbitmq:4-management
-    container_name: rabbitmq_elastic
+    container_name: rabbitmq_notification
     ports:
       - '5673:5672'
       - '15673:15672'
@@ -151,16 +151,16 @@ services:
     networks:
       - app_network
 
-  kafka_notification:
+  kafka_elasticsearch:
     image: confluentinc/cp-kafka:latest
-    container_name: kafka_notification
+    container_name: kafka_elasticsearch
     ports:
       - '9092:9092'
       - '29092:29092'
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_notification:9092,PLAINTEXT_HOST://kafka_notification:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_elasticsearch:9092,PLAINTEXT_HOST://kafka_elasticsearch:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKAJS_NO_PARTITIONER_WARNING: 1

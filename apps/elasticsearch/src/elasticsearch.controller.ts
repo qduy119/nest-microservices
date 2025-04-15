@@ -6,7 +6,8 @@ import {
   EventPattern,
   MessagePattern,
   Payload,
-  RmqContext
+  KafkaContext,
+  RpcException
 } from '@nestjs/microservices';
 import {
   CreateOrUpdateIndexEvent,
@@ -25,30 +26,24 @@ export class ElasticsearchController {
   @EventPattern(ELASTIC_CREATE_INDEX_EVENT)
   async createOrUpdateIndex(
     @Payload() payload: CreateOrUpdateIndexEvent,
-    @Ctx() context: RmqContext
+    @Ctx() context: KafkaContext
   ): Promise<void> {
-    const channel = context.getChannelRef();
-    const originalMsg = context.getMessage();
-
     try {
+      console.log(context.getMessage());
       const { documents, index } = payload;
       await this.elasticsearchService.createOrUpdateIndex(index, documents);
-      channel.ack(originalMsg);
     } catch (error) {
-      console.log('Create error: ', error);
-      channel.nack(originalMsg, false, true);
+      throw new RpcException(error);
     }
   }
 
   @MessagePattern(ELASTIC_GET_SEARCH_EVENT)
   async search(
     @Payload() payload: GetSearchEvent,
-    @Ctx() context: RmqContext
+    @Ctx() context: KafkaContext
   ): Promise<any> {
-    const channel = context.getChannelRef();
-    const originalMsg = context.getMessage();
-
     try {
+      console.log(payload, context.getMessage());
       const { index, query, fields, offset, limit } = payload;
       const searchQuery = {
         multi_match: {
@@ -63,11 +58,9 @@ export class ElasticsearchController {
         limit,
         offset
       );
-      channel.ack(originalMsg);
       return data;
     } catch (error) {
-      console.log('Create error: ', error);
-      channel.nack(originalMsg, false, true);
+      throw new RpcException(error);
     }
   }
 }

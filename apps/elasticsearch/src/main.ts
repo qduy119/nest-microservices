@@ -1,26 +1,23 @@
 import { NestFactory } from '@nestjs/core';
 import { ElasticsearchModule } from './elasticsearch.module';
 import { ConfigService } from '@nestjs/config';
-import { elasticQueue, ShareConfig } from '@app/shared';
+import { ShareConfig } from '@app/shared';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const context =
     await NestFactory.createApplicationContext(ElasticsearchModule);
-  const { host, port, username, password } = context
+  const { host, port } = context
     .get(ConfigService)
-    .get<ShareConfig['elastic_rabbitmq']>('elastic_rabbitmq');
+    .get<ShareConfig['elasticsearch_kafka']>('elasticsearch_kafka');
 
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     ElasticsearchModule,
     {
-      transport: Transport.RMQ,
+      transport: Transport.KAFKA,
       options: {
-        urls: [`amqp://${username}:${password}@${host}:${port}`],
-        queue: elasticQueue,
-        noAck: false,
-        queueOptions: {
-          durable: false
+        client: {
+          brokers: [`${host}:${port}`]
         }
       }
     }

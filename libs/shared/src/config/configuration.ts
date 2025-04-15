@@ -43,11 +43,11 @@ export type ShareConfig = {
     username: string;
     password: string;
   };
-  notification_kafka: {
+  elasticsearch_kafka: {
     host: string;
     port: number;
   };
-  elastic_rabbitmq: {
+  notification_rabbitmq: {
     host: string;
     port: number;
     username: string;
