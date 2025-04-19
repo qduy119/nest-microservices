@@ -7,3 +7,4 @@ export * from './proto';
 export * from './config';
 export * from './exceptions';
 export * from './events';
+export * from './interceptors';
