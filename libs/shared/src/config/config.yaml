@@ -31,7 +31,7 @@ file_grpc:
   port: 3007
 
 payment_rabbitmq:
-  host: rabbitmq_order
+  host: rabbitmq_payment
   port: 5672
   username: admin
   password: password
