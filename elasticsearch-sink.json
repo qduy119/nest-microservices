@@ -1,0 +1,14 @@
+{
+  "name": "es-sink-connector",
+  "config": {
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "connection.url": "https://f4a460361caa450f82743d2a29957293.us-central1.gcp.cloud.es.io:443",
+    "type.name": "_doc",
+    "topics": "pg.public.Items",
+    "key.ignore": "true",
+    "schema.ignore": "true",
+    "name": "es-sink-connector",
+    "connection.username": "elastic",
+    "connection.password": "zLaKnPrPWjOy6eACT5anMxdi"
+  }
+}

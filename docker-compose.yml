@@ -16,7 +16,10 @@ services:
       - mongodb_payment
       - rabbitmq_order
       - rabbitmq_notification
+      - rabbitmq_item
+      - rabbitmq_payment
       - kafka_elasticsearch
+      - debezium
     networks:
       - app_network
 
@@ -35,7 +38,7 @@ services:
       - app_network
 
   postgres_item:
-    image: postgres
+    image: debezium/postgres
     container_name: postgres_item
     environment:
       POSTGRES_USER: root
@@ -140,6 +143,18 @@ services:
     networks:
       - app_network
 
+  rabbitmq_payment:
+    image: rabbitmq:4-management
+    container_name: rabbitmq_payment
+    ports:
+      - '5675:5672'
+      - '15675:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: password
+    networks:
+      - app_network
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
@@ -167,6 +182,26 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
+    networks:
+      - app_network
+
+  debezium:
+    image: debezium/connect:2.5
+    container_name: debezium
+    ports:
+      - '8083:8083'
+    environment:
+      BOOTSTRAP_SERVERS: kafka_elasticsearch:9092
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: connect-configs
+      OFFSET_STORAGE_TOPIC: connect-offsets
+      STATUS_STORAGE_TOPIC: connect-status
+      KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+      PLUGIN_PATH: /kafka/connect/debezium-connector-postgres,/kafka/connect/elasticsearch
+    depends_on:
+      - postgres_item
     networks:
       - app_network
 

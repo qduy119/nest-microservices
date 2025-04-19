@@ -91,3 +91,4 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 - API Gateway reverse proxy, load balancing, rate limitting, ...
 - CI/CD: Github Actions / Jenkins
 - K8s
+- CDC to sync with Elastic

@@ -1,0 +1,16 @@
+{
+  "name": "pg-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "database.hostname": "localhost",
+    "database.port": "5433",
+    "database.user": "root",
+    "database.password": "postgres",
+    "database.dbname": "microservices_item",
+    "database.server.name": "pg",
+    "table.include.list": "public.Items",
+    "plugin.name": "pgoutput",
+    "slot.name": "debezium",
+    "publication.autocreate.mode": "filtered"
+  }
+}
