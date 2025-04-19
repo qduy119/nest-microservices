@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import {
+  AppInterceptor,
   CatchAllExceptionFilter,
   LoggerFactory,
   ShareConfig
@@ -47,6 +48,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.setGlobalPrefix('api');
   app.useGlobalFilters(new CatchAllExceptionFilter());
+  app.useGlobalInterceptors(new AppInterceptor());
 
   const config = new DocumentBuilder()
     .setTitle('E-commerce microservice projects')
